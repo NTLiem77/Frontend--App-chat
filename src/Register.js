@@ -1,11 +1,11 @@
 import {useEffect, useState} from "react";
 import { w3cwebsocket } from "websocket";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 const Register = () =>{
     // state để lưu trữ dữ liệu người dùng
     const [user, setUser] =useState("");
     const [pass, setPass] =useState("");
-    const navigate = useNavigate();
+
     // hàm xử lý sự kiện gửi yêu cầu đăng ký
     const handleRegister = () =>{
         //Tạo một đối tượng Websocket
@@ -49,12 +49,11 @@ const Register = () =>{
       event.preventDefault();
         // Gọi hàm handleRegister để thực hiện đăng ký thông qua WebSocket
         handleRegister();
-        navigate("/login")
     }
     return (
-        <div className="row mt-5">
+        <div className="row">
             <div className="offset-lg-3 col-lg-6">
-                <form className="container mt-5" onSubmit={handleSubmit}>
+                <form className="container" onSubmit={handleSubmit}>
                     <div className="card">
                         <div className="card-header">
                             <h2>Register</h2>
