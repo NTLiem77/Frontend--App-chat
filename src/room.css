@@ -1,0 +1,469 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:wght@300;400;500;600;700&display=swap') ;
+*{
+    padding: 0;
+    margin:0;
+    box-sizing: border-box;
+}
+
+.container1{
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    height: calc(106vh - 40px);
+    background: #fff;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.06), 0 2px 5px 0 rgba(0,0,0,0.06);
+    display: flex;
+}
+.container1 .left-sidebar{
+    position: relative;
+    flex: 30%;
+    background: #fff;
+    border-right: 1px solid rgba(0,0,0,0.06)
+}
+.container1 .right-sidebar{
+    position: relative;
+    flex: 70%;
+    background: #e5ddd5;
+}
+.container1 .right-sidebar::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.06
+}
+.header-chat{
+    position: relative;
+    width: 100%;
+    height: 60px;
+    background: #ededed;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px
+}
+.header-chat p {
+    margin-left: 20px;
+    margin-bottom: 0;
+    font-size: 18px;
+}
+.header-chat .user-avatar i{
+    position: absolute;
+    top: 6px;
+    left: 40px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.user-avatar{
+    position: relative;
+    height: 40px;
+    width: 40px;
+    overflow: hidden;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.icon-nav {
+    position: relative;
+}
+.icon-nav i{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+}
+
+.imgtext1 {
+    position: relative;
+    display: flex;
+    border: 1px solid #fff;
+    padding: 10px 0 13px 5px;
+    margin-left: 1px;
+    align-items: center;
+    margin-top: 8px;
+    margin-left: 16px;
+}
+.img-cover{
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+    width: 100%;
+    height: 100%
+}
+.icon-nav{
+    display: flex;
+}
+.icon-nav li{
+    display: flex;
+    list-style: none;
+    cursor: pointer;
+    color: #777;
+    font-size: 1.5em;
+    margin-left: 22px
+}
+.search-chat{
+    position: relative;
+    width: 100%;
+    height: 50px;
+    background: #f6f6f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+.search-chat i{
+    position: absolute;
+    left: 30px;
+    top: 18px;
+}
+.search-chat div{
+    width: 100%;
+}
+.search-chat div input{
+    width: 100%;
+    outline: none;
+    border: none;
+    padding: 6px;
+    background: #fff;
+    height: 38px;
+    border-radius: 30px;
+    font-size: 14px;
+    padding-left: 40px
+}
+.search-chat div ion-icon{
+    position: absolute;
+    left: 30px;
+    top: 14px;
+    font-size: 1.2em
+}
+.search-chat div input::placeholder{
+    color: #bbb
+}
+.list-chat{
+    position: relative;
+    height: calc(92% - 112px);/* Chiều cao header chat+ Search chat* 60+50*/
+    overflow-y:auto;
+}
+.author_mess{
+    margin-top: 0;
+    margin-bottom: 0rem;
+    margin-left: 29px;
+}
+.list-chat>.box-chat{
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    cursor: pointer;
+}
+.box-chat.active{
+    display: flex;
+    margin-top: 20px;
+    margin-left: 10px;
+    border-bottom: 1px solid black;
+}
+.box-chat:hover{
+    margin-top: 20px;
+    margin-right: 10px;
+}
+.imgtext1:hover{
+    cursor: pointer;
+    background: #ccc;
+}
+.box-chat>.img-userchat{
+    position: relative;
+    height: 45px;
+    min-width: 45px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-right:  10px;
+    margin-bottom: 10px;
+}
+.box-chat>.details{
+    position: relative;
+    width: 100%;
+}
+.details>.headerlist{
+    display: flex;
+    justify-content:space-between;
+    margin-top: 10px;
+}
+.details>.headerlist>p{
+    font-size: 20px;
+    color: #111;
+    font-weight: 500
+}
+.details>.headerlist>.time{
+    font-size: 0.75em;
+    color: #aaa
+}
+.old>.details>.headerlist>.time{
+    color: #06d755
+}
+.message{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.message p{
+    color:#aaa;
+    display:-webkit-box;
+    -webkit-line-clamp:1;
+    font-size: 0.9em;
+    -webkit-box-orient:vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.message b{
+    color: #fff;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.75em;
+    background: #06d755
+}
+.imgtext{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.imgtext h3{
+    font-weight: 400;
+    line-height: 1.2em;
+    margin-left: 15px
+}
+.imgtext h3 span{
+    font-size: 0.8em;
+    color: #555
+}
+.chatbox{
+    position: relative;
+    height: calc(93% - 120px);/* Chiều cao header chat+ bottom chat* 60+60*/
+    padding: 50px;
+    overflow-y: auto;
+}
+.chatbox .mess.frnmess p{
+    position: relative;
+    right: -2px;
+    text-align: right;
+    max-width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.9em;
+}
+.chatbox .mess.mynmess p{
+    position: relative;
+    right: -18px;
+    text-align: right;
+    max-width: 100%;
+    padding: 12px;
+    background: #dcf8c6;
+    border-radius: 10px;
+    font-size: 0.9em;
+}
+.mess{
+    position: relative;
+    display: flex;
+    width: 100%;
+    margin: 5px 0
+}
+.mess p{
+    position: relative;
+    right: 20px;
+    text-align: right;
+    max-width: 100%;
+    padding: 12px;
+    background: #dcf8c6;
+    border-radius: 10px;
+    font-size: 0.9em
+}
+.mess p::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -12px;
+    width: 20px;
+    height: 20px;
+    background:  linear-gradient(135deg, #dcf8c6 0%, #dcf8c6 50%, transparent 50%, transparent)
+}
+.mess p span{
+    font-size: 0.85em;
+    margin-top:5px;
+    display: block;
+    opacity: 0.5
+}
+.mymess{
+    justify-content: flex-end;
+}
+.frnmess{
+    justify-content: flex-start;
+}
+.frnmess p{
+    background: #fff;
+    text-align: left;
+}
+.frnmess p::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -12px;
+    width: 20px;
+    height: 20px;
+    background:  linear-gradient(225deg, #fff 0%, #fff 50%, transparent 50%, transparent)
+}
+.chat-input-right{
+    width: 100%;
+    height: 60px;
+    background: #f0f0f0;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 0;
+    position: absolute;
+    bottom: 0;
+    margin-top: 10px;
+}
+.chat-input-right .md.hydrated{
+    font-size: 20px;
+    cursor: pointer;
+}
+.chat-input-left{
+    width: 100%;
+    height: 60px;
+    background: #f0f0f0;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    border-right: 1px solid rgba(0,0,0,0.06);
+}
+.chat-input-left input{
+    width: 90%;
+    margin: 0 20px;
+    border: none;
+    outline: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 1em;
+}
+.chat-input-left FontAwesomeIcon {
+    font-size: 25px;
+    cursor: pointer;
+}
+.right-sidebar{
+    width: 100%;
+}
+.right-sidebar .search-chat{
+    position: relative;
+    width: 35%;
+    height: 50px;
+    background: #f6f6f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 15px;
+    box-sizing: border-box;
+    border-radius: 30px;
+    margin-top: 5px;
+    margin-left: 30px;
+}
+.right-sidebar .search-chat i{
+    position: absolute;
+    left: 30px;
+    top: 15px;
+    cursor: pointer;
+}
+.fa-solid, .fas{
+    font-weight: 600;
+    font-size: 20px;
+}
+.chat-input-right input{
+    position: relative;
+    width: 90%;
+    margin:0 20px;
+    border: none;
+    outline: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 1em
+}
+.chat-input-right i{
+    margin: 0 10px;
+    font-size: 21px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+.right-sidebar button{
+    border: none;
+}
+.mess.mymess{
+    position: relative;
+}
+.mess.mymess img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: absolute;
+    right: -43px;
+    top: 7px;
+}
+.mess.frnmess{
+    position: relative;
+}
+.mess.frnmess .messFr{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: absolute;
+    top: 10px;
+    left: -20px;
+}
+.group1{
+    margin-left:  50%;
+}
+
+.m_l.call_end {
+    color: red;
+    font-size: 36px;
+}
+p.red-text {
+    color: red;
+}
+.call{
+    font-size: 36px;
+    color: green !important;
+}
+.flex-group{
+    justify-content: space-between;
+
+}
+.m_l{
+    margin-left: -221px;
+
+}
+.user-group1{
+    position: relative;
+    height: 200px;
+    width: 200px;
+    overflow: hidden;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 32px -21px;
+}
+.mess.frnmess h6{
+    margin-left: 20px;
+}
+.pointer {cursor: pointer;}
