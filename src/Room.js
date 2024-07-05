@@ -50,13 +50,13 @@ export default class Room extends React.Component{
                 <div className="left-sidebar">
                     <div className="header-chat">
                         <div className="flex">
-                        <div className="user-avatar">
-                            <img src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg"
-                                 className="img-cover"/>
+                            <div className="user-avatar">
+                                <img src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg"
+                                     className="img-cover"/>
 
-                        </div>
+                            </div>
                             <p className="m_9">{mesnam || username}</p>
-                       </div>
+                        </div>
                         <ul className="icon-nav">
                             <li>
                                 <ion-icon name="scan-circle-outline" role="img" className="md hydrated" aria-label="scan circle outline">
@@ -122,8 +122,8 @@ export default class Room extends React.Component{
                     </div>
                     <div className="chat-input-left pointer">
                         <input className="pointer" type="text" value={this.props.roomName}
-                                onChange={(e) => this.props.setRoomName(e.target.value)}
-                                placeholder="Nhập tên phòng"/>
+                               onChange={(e) => this.props.setRoomName(e.target.value)}
+                               placeholder="Nhập tên phòng"/>
                         <div onClick={this.props.handCreateRoom}>
                             <FontAwesomeIcon icon="fa-sharp fa-light fa-square-plus"/><FontAwesomeIcon icon={faSquarePlus}/>
                         </div>
@@ -134,19 +134,28 @@ export default class Room extends React.Component{
                 <div className="right-sidebar">
                     {/*Header chat*/}
                     <div className="header-chat">
+                        {this.props.isMessenger === false &&
+                            <div className={"imgtext"}>
+                                <div className={"user-avatar"}>
+                                    <img src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg" className={"img-cover"}/>
+                                </div>
+
+                                <p className={"author_mess"}>{nameRoom}<br/>
+                                    <span>Online</span></p>
+                            </div>
+
+                        } {this.props.isMessenger === true &&
                         <div className={"imgtext"}>
                             <div className={"user-avatar"}>
-                                <img src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg" className={"img-cover"}/>
+                                <img
+                                    src="https://w7.pngwing.com/pngs/831/88/png-transparent-user-profile-computer-icons-user-interface-mystique-miscellaneous-user-interface-design-smile-thumbnail.png"
+                                    className="img-cover"/>
                             </div>
-
-                            <div>
-                                <ion-icon name={"person-add-outline"} role={"img"} className ="md hydrated" aria-label={"person-add-outline"}></ion-icon>
-                            </div>
-
-                            <p className={"author_mess"}>{nameRoom}<br/>
-                            <span>Online</span></p>
+                            <p className={"author_mess"}>{data}<br/>
+                                <span>Online</span></p>
                         </div>
 
+                    }
                         <ul className="icon-nav">
                             <li onClick={() => this.props.videoCall(nameRoom, url )}>
                                 <i className="fa-solid fa-video"></i>
@@ -180,7 +189,7 @@ export default class Room extends React.Component{
                                                 <div className="mess frnmess">
                                                     <h6>
                                                         <h6 key={index}>
-                                                            <img src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className={'messFr'}></img>
+                                                            <img  src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className="messFr"></img>
                                                             <h6>{message.name}</h6>
                                                             <p>{decodeURIComponent(message.mes)}
                                                                 <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
@@ -191,27 +200,29 @@ export default class Room extends React.Component{
                                         </div>
                                         <div>
                                             {message.name === "20130433" && message.mes.startsWith("https") &&
-                                                <div className="mess frnmess">
+                                                <div className="mess mymess">
                                                     <h6>
                                                         <h6 key={index}>
                                                             <h6>{message.name}</h6>
-                                                            <img  src={decodeURIComponent(message.mes)} alt=""/>
-                                                            <br/>
-                                                            <p><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
+                                                            <img src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className={'messFr'}></img>
+                                                            <p >  <img className="img_chat" src={decodeURIComponent(message.mes)} alt=""/>
+                                                                <br/>
+                                                                <p>
+                                                                    <span>{convertServerTimeToClientTime(message.createAt)}</span></p></p>
+                                                        </h6>
                                                     </h6>
-                                                </h6>
                                                 </div>
                                             }
                                         </div>
                                         <div>
                                             {message.name === "20130423" && message.mes.startsWith("https") &&
-                                                <div className="mess frnmess">
+                                                <div className="mess mymess ">
                                                     <h6>
                                                         <h6 key={index}>
+                                                            <img src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className={'messFr'}></img>
                                                             <h6>{message.name}</h6>
-                                                            <img  src={decodeURIComponent(message.mes)} alt=""/>
-                                                            <br/>
-                                                            <p><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
+                                                            <p><img className="img_chat" src={decodeURIComponent(message.mes)} alt=""/>
+                                                                <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
                                                         </h6>
                                                     </h6>
                                                 </div>
@@ -223,10 +234,12 @@ export default class Room extends React.Component{
                                                 <div className="mess frnmess">
                                                     <h6>
                                                         <h6 key={index}>
+                                                            <img src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className={'messFr'}></img>
                                                             <h6>{message.name}</h6>
-                                                            <img  src={decodeURIComponent(message.mes)} alt=""/>
-                                                            <br/>
-                                                            <p><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
+                                                            <p >  <img className="img_chat"  src={decodeURIComponent(message.mes)} alt=""/>
+                                                                <br/>
+                                                                <p>
+                                                                    <span>{convertServerTimeToClientTime(message.createAt)}</span></p></p>
                                                         </h6>
                                                     </h6>
                                                 </div>
@@ -329,41 +342,41 @@ export default class Room extends React.Component{
                     </div>
 
                     <div className="chat-input-right">
-                           <div id="pos" onClick={this.props.handPosClick}>
-                               <i className="fa-regular fa-face-smile"></i>
-                           </div>
-                                <div>
-                                    <input type={"file"} accept={'image/*'} className={'input-field'} hidden
-                                           onChange={(event) => {
-                                               this.props.setImageUpload(event.target.files[0]);
-                                               this.props.setMess(this.props.imageUrls)
-                                           }}
-                                    />
-                                    <i className="fa-solid fa-paperclip"
-                                       onClick={() => document.querySelector(".input-field").click()}>
-                                    </i>
-                                </div>
-                                <input type="text" placeholder="Type a message" value={this.props.messenger}
-                                       onChange={(e) => this.props.setMess(e.target.value)} onKeyPress={(e) => {
-                                    if (e.key === 'Enter') {
-                                        this.props.twoMessChat(nameRoom);
-                                    }
-                                }} fdprocessedid="61a96k"/>
+                        <div id="pos" onClick={this.props.handPosClick}>
+                            <i className="fa-regular fa-face-smile"></i>
+                        </div>
+                        <div>
+                            <input type={"file"} accept={'image/*'} className={'input-field'} hidden
+                                   onChange={(event) => {
+                                       this.props.setImageUpload(event.target.files[0]);
+                                       this.props.setMess(this.props.imageUrls)
+                                   }}
+                            />
+                            <i className="fa-solid fa-paperclip"
+                               onClick={() => document.querySelector(".input-field").click()}>
+                            </i>
+                        </div>
+                        <input type="text" placeholder="Type a message" value={this.props.messenger}
+                               onChange={(e) => this.props.setMess(e.target.value)} onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                                this.props.twoMessChat(nameRoom);
+                            }
+                        }} fdprocessedid="61a96k"/>
                         {this.props.isMessenger == false ?(
                             <ion-icon onClick={() => this.props.twoMessChat( nameRoom)} name="send" role="img"
                                       className="md hydrated" aria-label="send"></ion-icon>
                         ) :(  <ion-icon onClick={() => this.props.messPeople( data)} name="send" role="img"
                                         className="md hydrated" aria-label="send">hi</ion-icon>)}
-                                    </div>
-                           </div>
-                        <div className="icon_Emoid">
-                            {this.props.isEmojiPickerVisible && (
-                                <EmojiPicker
-                                    onEmojiClick={this.props.handleEmojiClick}
-                                />
-                            )}
-                        </div>
-                     </div>
-                 </div>
+                    </div>
+                </div>
+                <div className="icon_Emoid">
+                    {this.props.isEmojiPickerVisible && (
+                        <EmojiPicker
+                            onEmojiClick={this.props.handleEmojiClick}
+                        />
+                    )}
+                </div>
+            </div>
+        </div>
     }
 }
