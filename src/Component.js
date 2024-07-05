@@ -12,6 +12,8 @@
                 const [errorMsg, setErrorMsg] = useState("");
                 const [customer, setCutomer] = useState("");
                 const [messenger, setMess] = useState("");
+                const [roomName, setRoomName] = useState("");
+                const [messege, setMessege] = useState([]);
 
                 // khi component được taạo thiết lập kết nối websocket
                 useEffect(() =>{
@@ -84,6 +86,42 @@
 
                 const twoMessChat = (roomName) =>{
                     messchat(roomName).then(get_room_mess_chat(roomName));
+                }
+
+                // get people chat mess
+                const GET_PEOPLE_CHAT_MES = () => {
+                    if(socket){
+                        const mess = {
+                            action: "onchat",
+                            data: {
+                                event: "GET_PEOPLE_CHAT_MES",
+                                data: {
+                                    name: roomName,
+                                    page: 1
+                                }
+                            }
+                        }
+                        socket.send(JSON.stringify(mess));
+                    }
+                }
+
+                // send chat people
+                const messPeople = (user) =>{
+                    if (socket){
+                        const people = {
+                            action: "onchat",
+                            data: {
+                                event: "SEND_CHAT",
+                                data: {
+                                    type: "people",
+                                    to: user,
+                                    mes: encodeURIComponent(messenger)
+                                }
+                            }
+                        }
+                        setMessege(prevMessages => [...prevMessages,  , messenger]);
+                        socket.send(JSON.stringify(people));
+                    }
                 }
 
             // check user
