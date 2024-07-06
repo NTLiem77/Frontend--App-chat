@@ -3,6 +3,7 @@
             import {w3cwebsocket} from "websocket";
 
             import LoginForm from "./LoginForm";
+            import Room from "./Room";
             const Component = () =>{
                 const [socket, setSocket] = useState(null);
                 const [user, setUser] = useState("");
@@ -14,6 +15,7 @@
                 const [messenger, setMess] = useState("");
                 const [roomName, setRoomName] = useState("");
                 const [messege, setMessege] = useState([]);
+                const [isMessenger, setisMess] = useState(false);
 
                 // khi component được taạo thiết lập kết nối websocket
                 useEffect(() =>{
@@ -50,6 +52,11 @@
               }
               socket.send(JSON.stringify(eventLougout));
             }
+            //xử lý join room
+                const handJoinRoom = (roomName) => {
+
+                }
+
             // get room mess chat
                 const get_room_mess_chat = (roomName) => {
                     if(socket) {
@@ -166,6 +173,32 @@
                                     // Đăng nhập thất bại, xử lý lỗi tại đây
                                 }
 
+                                // get room chat mess
+                            if(responseData.event === "GET_ROOM_CHAT_MES" && responseData.status === "success"){
+                                const  room = localStorage.getItem("nameRoom");
+                                const name = sessionStorage.getItem("name");
+                                handJoinRoom(room);
+                            }
+
+                            // get people chat mess
+                            if (responseData.event === "GET_PEOPLE_CHAT_MES" && responseData.status === "success"){
+                                const  people = localStorage.getItem("namePeople");
+                                const name = sessionStorage.getItem("name");
+                            }
+
+                            // gửi tin nhắn thành công
+                            if (responseData.event === "SEND_CHAT" && responseData.status === "success"){
+                                setisMess(true);
+                                localStorage.setItem("mes", responseData.data.mes);
+                                localStorage.setItem("messname", responseData.data.name);
+                                console.log(responseData.chatData);
+                                setMess("");
+                                // để hiển thị danh sách thì ta phải lập lại việc join room trước đó
+                                // lấy giá tr của room đã lưu tr dựa vào handJoinRoom(room)
+                                const room = localStorage.getItem("nameRoom");
+                                handJoinRoom(room);
+                            }
+
                              // check user
                             if (responseData.event === "CHECK_USER" && responseData.status === "success"){
                                 console.log(responseData.data.status);
@@ -183,10 +216,18 @@
                     <div>
                             <div>
                                 {(isLoginSuccess == true)&&
-                                            <div>
-                                                <h1>Thanh cong</h1>
-                                                <h4 onClick={()=> handLougout()}>Logout</h4>
-                                            </div>
+                                    <Room
+                                        roomName={roomName}
+                                        setRoomName={setRoomName}
+                                        messPeople={messPeople}
+                                        mess_chat={messchat}
+                                        twoMessChat={twoMessChat}
+                                        messenger={messenger}
+                                        setMess={setMess}
+                                        isMessenger={isMessenger}
+                                        messege={messege}
+                                    />
+
                                 }
                                 {isLoginSuccess == false &&
                                         <LoginForm
