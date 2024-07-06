@@ -279,13 +279,13 @@
 }
 .mess p{
     position: relative;
+    right: 20px;
     text-align: right;
     max-width: 100%;
     padding: 12px;
-    background: #fff;
+    background: #dcf8c6;
     border-radius: 10px;
-    font-size: 0.9em;
-    margin-right: 20px;
+    font-size: 0.9em
 }
 .mess p::before{
     content: '';
@@ -294,7 +294,7 @@
     right: -12px;
     width: 20px;
     height: 20px;
-    background:  linear-gradient(135deg, #fff 0%, #fff 50%, transparent 50%, transparent)
+    background:  linear-gradient(135deg, #dcf8c6 0%, #dcf8c6 50%, transparent 50%, transparent)
 }
 .mess p span{
     font-size: 0.85em;
@@ -311,9 +311,6 @@
 .frnmess p{
     background: #fff;
     text-align: left;
-}
-.img_chat{
-    width: 300px
 }
 .frnmess p::before{
     content: '';
@@ -415,10 +412,7 @@
 .mess.mymess{
     position: relative;
 }
-
-
-
-.mess.mymess h6 h6 > img{
+.mess.mymess img{
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -426,7 +420,6 @@
     right: -43px;
     top: 7px;
 }
-
 .mess.frnmess{
     position: relative;
 }
