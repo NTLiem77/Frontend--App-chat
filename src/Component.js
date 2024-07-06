@@ -3,7 +3,6 @@
             import {w3cwebsocket} from "websocket";
 
             import LoginForm from "./LoginForm";
-            import Room from "./Room";
             const Component = () =>{
                 const [socket, setSocket] = useState(null);
                 const [user, setUser] = useState("");
@@ -180,12 +179,6 @@
                                 handJoinRoom(room);
                             }
 
-                            // get people chat mess
-                            if (responseData.event === "GET_PEOPLE_CHAT_MES" && responseData.status === "success"){
-                                const  people = localStorage.getItem("namePeople");
-                                const name = sessionStorage.getItem("name");
-                            }
-
                             // gửi tin nhắn thành công
                             if (responseData.event === "SEND_CHAT" && responseData.status === "success"){
                                 setisMess(true);
@@ -216,17 +209,7 @@
                     <div>
                             <div>
                                 {(isLoginSuccess == true)&&
-                                    <Room
-                                        roomName={roomName}
-                                        setRoomName={setRoomName}
-                                        messPeople={messPeople}
-                                        mess_chat={messchat}
-                                        twoMessChat={twoMessChat}
-                                        messenger={messenger}
-                                        setMess={setMess}
-                                        isMessenger={isMessenger}
-                                        messege={messege}
-                                    />
+                                    <h1>Thành công</h1>
 
                                 }
                                 {isLoginSuccess == false &&
