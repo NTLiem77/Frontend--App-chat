@@ -5,9 +5,9 @@ export default class LoginForm extends React.Component {
     render() {
         return (
             <div>
-                <div className="row m_60 mt-5">
+                <div className="row m_60">
                     <div className="offset-lg-3 col-lg-6">
-                        <form className="container mt-5">
+                        <form className="container">
                             <div className="card">
                                 <div className="card-header">
                                     <h2>User Login</h2>
