@@ -53,7 +53,7 @@ export default class Room extends React.Component{
                     {/*search chat*/}
                     <div className="search-chat">
                         <div>
-                            <input type="text" placeholder="Search or start new chat" fdprocessedid="hss68p"/>
+                            <input className="pointer" type="text" placeholder="Search or start new chat" fdprocessedid="hss68p"/>
                             <ion-icon name="search-outline" role="img" className="md hydrated" aria-label="search outline">
                             </ion-icon>
                         </div>
@@ -61,10 +61,8 @@ export default class Room extends React.Component{
 
                     {/*Chat list*/}
                     <div className="list-chat">
-
                         <div>
                             <div>
-
                                 {this.props.roomList.map((room, index) => (
                                     <div className="group" >
                                         {room.name !== "20130388" && room.name !=="sassd" && room.name !== "" && room.name !== "2324322" && room.name !== "Thu?n ??ng c?p" && room.name !== "Nhom 11 _Da Cap" && room.name !== "12314141"
@@ -83,15 +81,13 @@ export default class Room extends React.Component{
                                         }
                                     </div>
                                 ))}
-
-
                             </div>
                         </div>
 
 
                     </div>
-                    <div className="chat-input-left">
-                        < input type="text" value={this.props.roomName}
+                    <div className="chat-input-left pointer">
+                        <input className="pointer" type="text" value={this.props.roomName}
                                 onChange={(e) => this.props.setRoomName(e.target.value)}
                                 placeholder="Nhập tên phòng"/>
                         <div onClick={this.props.handCreateRoom}>
@@ -100,7 +96,7 @@ export default class Room extends React.Component{
                     </div>
 
                 </div>
-
+                {/*Phần chat*/}
                 <div className="right-sidebar">
                     {/*Header chat*/}
                     <div className="header-chat">
@@ -124,13 +120,13 @@ export default class Room extends React.Component{
                         </div>
 
                         {/*logout*/}
-                        <li className={"logout"} onClick={this.props.handLougout}>Đăng xuất</li>
+                        <li className={"logout pointer"} onClick={this.props.handLougout}>Đăng xuất</li>
                     </div>
 
                     {/*Check User*/}
-                    <div className="search-chat">
+                    <div className="search-chat pointer">
                         <i className="fa-solid fa-chevron-right"></i>
-                        <div><input type="text" placeholder="Check User" fdprocessedid="hss68p"/>
+                        <div><input className="pointer" type="text" placeholder="Check User" fdprocessedid="hss68p"/>
                         </div>
                     </div>
 
@@ -138,7 +134,6 @@ export default class Room extends React.Component{
                     <div className="chatbox">
                         <div>
                             {sortMess.map((message, index) => (
-
                                     <div>
                                         <div>
                                             {message.name === "20130433" && !message.mes.startsWith("https") &&
@@ -157,7 +152,6 @@ export default class Room extends React.Component{
                                         <div>
                                             {message.name === "20130423" && !message.mes.startsWith("https") &&
                                                 <div className="mess frnmess">
-
                                                     <h6>
                                                         <h6 key={index}>
                                                             <img src={"https://i.pinimg.com/564x/b1/78/32/b17832ed39fd47db601a525e963050a2.jpg"} className={'messFr'}></img>
@@ -188,9 +182,7 @@ export default class Room extends React.Component{
 
                                         <div>
                                             {message.name === "20130423" && message.mes.startsWith("https") || message.name === "20130433" && message.mes.startsWith("https") &&
-
                                                 <div className="mess frnmess">
-
                                                     <h6>
                                                         <h6 key={index}>
 
@@ -239,35 +231,31 @@ export default class Room extends React.Component{
                     </div>
 
                     <div className="chat-input-right">
-                   <div id="pos" onClick={this.props.handPosClick}>
-                       <i className="fa-regular fa-face-smile"></i>
-                   </div>
-                        <i className="fa-solid fa-paperclip"></i>
-                        <input type="text" placeholder="Type a massage"/>
-                        <i className="fa-solid fa-paper-plane"></i>
-                    </div>
+                           <div id="pos" onClick={this.props.handPosClick}>
+                               <i className="fa-regular fa-face-smile"></i>
+                           </div>
+                                <i className="fa-solid fa-paperclip"></i>
+                                <input className="pointer" type="text" placeholder="Type a massage"/>
+                                <i className="fa-solid fa-paper-plane"></i>
+                            </div>
 
-                    <input type="text" placeholder="Type a message" value={this.props.messenger}
-                           onChange={(e) => this.props.setMess(e.target.value)} onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
-                            this.props.twoMessChat(nameRoom);
-                        }
-                    }} fdprocessedid="61a96k"/>
-                    <ion-icon onClick={() => this.props.twoMessChat(nameRoom)} name="send" role="img"
-                              className="md hydrated" aria-label="send">hello</ion-icon>
-                </div>
-                <div className="icon_Emoid">
-                    {this.props.isEmojiPickerVisible && (
-                        <EmojiPicker
-                            onEmojiClick={this.props.handleEmojiClick}
-                        />
-                    )}
-                </div>
-            </div>
-
-        </div>
-
-
+                            <input type="text" placeholder="Type a message" value={this.props.messenger}
+                                   onChange={(e) => this.props.setMess(e.target.value)} onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                    this.props.twoMessChat(nameRoom);
+                                }
+                            }} fdprocessedid="61a96k"/>
+                            <ion-icon onClick={() => this.props.twoMessChat(nameRoom)} name="send" role="img"
+                                      className="md hydrated" aria-label="send">hello</ion-icon>
+                        </div>
+                        <div className="icon_Emoid">
+                            {this.props.isEmojiPickerVisible && (
+                                <EmojiPicker
+                                    onEmojiClick={this.props.handleEmojiClick}
+                                />
+                            )}
+                        </div>
+                     </div>
+                 </div>
     }
-
 }

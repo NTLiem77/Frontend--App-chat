@@ -287,6 +287,7 @@
                           const newSocket = new WebSocket("ws://140.238.54.136:8080/chat/chat");
                           setSocket(newSocket);
                           setErrorMsg("")
+                          // lấy ra danh sách người dùng, phòng
                           handGetUserList();
                           navigate("/login");
                         }
@@ -301,6 +302,7 @@
                             // relogin
                             if(responseData.event ==="RE_LOGIN"  && responseData.status === "success"){
                                 setIsLoginSuccess(true);
+                                // lấy ra danh sách người dùng, phòng
                                 handGetUserList();
                                 const room = localStorage.getItem("nameRoom");
                                 handJoinRoom(room);
@@ -337,6 +339,7 @@
                                 const room = localStorage.getItem("nameRoom");
                                 console.log(responseData.data.status);
                                 handJoinRoom(room);
+                                // lấy ra danh sách người dùng, phòng
                                 handGetUserList();
                             }
 
