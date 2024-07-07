@@ -67,6 +67,16 @@
     border-radius: 50%;
     cursor: pointer;
 }
+.imgtext1 {
+    position: relative;
+    display: flex;
+    border: 1px solid #fff;
+    padding: 10px 0 13px 5px;
+    margin-left: 1px;
+    align-items: center;
+    margin-top: 8px;
+    margin-left: 16px;
+}
 .img-cover{
     position: absolute;
     top: 0;
@@ -130,6 +140,11 @@
     height: calc(92% - 112px);/* Chiều cao header chat+ Search chat* 60+50*/
     overflow-y:auto;
 }
+.author_mess{
+    margin-top: 0;
+    margin-bottom: 0rem;
+    margin-left: 29px;
+}
 .list-chat>.box-chat{
     position: relative;
     width: 100%;
@@ -148,6 +163,10 @@
 .box-chat:hover{
     margin-top: 20px;
     margin-right: 10px;
+}
+.imgtext1:hover{
+    cursor: pointer;
+    background: #ccc;
 }
 .box-chat>.img-userchat{
     position: relative;
@@ -233,7 +252,7 @@
 }
 .mess p{
     position: relative;
-    right: 0;
+    right: 20px;
     text-align: right;
     max-width: 100%;
     padding: 12px;
@@ -308,9 +327,12 @@
     border-radius: 30px;
     font-size: 1em;
 }
-.chat-input-left i {
+.chat-input-left FontAwesomeIcon {
     font-size: 25px;
     cursor: pointer;
+}
+.right-sidebar{
+    width: 100%;
 }
 .right-sidebar .search-chat{
     position: relative;
@@ -351,4 +373,32 @@
     font-size: 21px;
     cursor: pointer;
     margin-right: 10px;
+}
+.right-sidebar button{
+    border: none;
+}
+.mess.mymess{
+    position: relative;
+}
+.mess.mymess img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: absolute;
+    right: -43px;
+    top: 7px;
+}
+.mess.frnmess{
+    position: relative;
+}
+.mess.frnmess .messFr{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: absolute;
+    top: 10px;
+    left: -20px;
+}
+.mess.frnmess h6{
+    margin-left: 20px;
 }

@@ -21,9 +21,24 @@
                 const [roomName, setRoomName] = useState("");
                 const [messege, setMessege] = useState([]);
                 const [isMessenger, setisMess] = useState(false);
+                // tao mang chua phong
+                const [roomList, setRoomList] =useState([]);
+                // emoij
+                const [selectedEmoji, setSelectedEmoji] =useState(null);
+                // check khi clcik vao emoij
+                const  [isEmojiPickerVisible, setEmojiPickerVisible] =useState(false);
                 const navigate = useNavigate();
 
+                //uploadFile
+                const [image, setImage] = useState(null)
+                const [fileName, setFileName] = useState("")
+
+                const handTwoClick = (roomName) =>{
+                    messchat(roomName).then(messPeople())
+                }
+
                 // khi component được taạo thiết lập kết nối websocket
+                const mesnam=  sessionStorage.getItem("mesnam");
                 useEffect(() =>{
                     const newSocket = new WebSocket("ws://140.238.54.136:8080/chat/chat");
 
@@ -31,9 +46,41 @@
                         console.log("Kết nối websocket đã được thiết lập", event);
                         setSocket(newSocket);
                     })
+                   const susscess =sessionStorage.getItem("success");
+                    if(susscess=== "success"){
+                        sessionStorage.setItem("name1", mesnam);
+                        const nlu = sessionStorage.getItem("codeNlu");
+                        newSocket.onopen = function () {
+                            const relogin = {
+                                action: "onchat",
+                                data: {
+                                    event: "RE_LOGIN",
+                                    data: {
+                                        user: mesnam,
+                                        code: nlu
+                                    }
+                                }
+                            }
+                            newSocket.send(JSON.stringify(relogin));
+                        }
+                    }
+                    return () => {
+                        console.log("Closing WebSocket connection...");
+                        newSocket.close();
+
+                    };
                 },[]);
+// xét lại giá tra (mặc định là false);
+                const handlePosClick = () => {
+                    setEmojiPickerVisible(!isEmojiPickerVisible);
+                };
+// clcik chọn emoij
+                const handleEmojiClick = (emoji) => {
+                    setSelectedEmoji(emoji.emoji); // chọn emoij
+                    // thêm nhiều emoij + vào trong mess -> xét lại các giá trị
+                    setMess(messenger + emoji.emoji);
 
-
+                };
                 // xử lý đăng nhập
                 const handleLogin = () => {
                     // gửi yêu cầu đăng nhập đến server socket
@@ -69,28 +116,33 @@
                               data: {
                                   name: roomName,
                               },
-                          }
-                      }
-                      socket.send(socket.stringify(data));
+                          },
+                      };
+                      socket.send(JSON.stringify(data));
                   }
                 }
-            //xử lý join room
-             const    handJoinRoom = (roomName) => {
-                 if (socket) {
-                     const joinroom = {
-                         action: "onchat",
-                         data: {
-                             event: "JOIN_ROOM",
-                             data: {
-                                 name: roomName
-                             }
-                         },
-                     }
-                     socket.send(socket.stringify(joinroom));
-                 }
-             }
 
-            // get room mess chat
+
+            //xử lý join room
+                const handJoinRoom = (roomName) => {
+
+                    if (socket) {
+                        const joinRoom = {
+                            action: "onchat",
+                            data: {
+                                event: "JOIN_ROOM",
+                                data: {
+                                    name: roomName
+                                }
+                            },
+                        }
+
+                        socket.send(JSON.stringify(joinRoom));
+                    }
+
+                }
+
+                // get room mess chat
                 const get_room_mess_chat = (roomName) => {
                     if(socket) {
                         const getroom = {
@@ -109,7 +161,7 @@
 
                 // send chat room
                 const messchat = (roomName) => {
-                    return new Promise(resolve => {
+                    return new Promise((resolve) => {
                         if(socket){
                             const mess1 = {
                                 action: "SEND_CHAT",
@@ -120,6 +172,8 @@
                                 }
 
                             }
+                            socket.send(JSON.stringify(mess1));
+                            resolve();
                         }
                     })
                 }
@@ -189,6 +243,16 @@
                                 event: "GET_USER_LIST"
                             }
                         }
+                        socket.send(JSON.stringify(getUser));// chuyen ve chuoi  - gui den socket
+                    }
+                }
+
+                // file đang làm
+                function handleImageChange({target: {files}}){
+                    if (files && files[0]){
+                        setFileName(files[0].name);
+                        setImage(URL.createObjectURL(files[0]));
+                        setMess(fileName);
                     }
                 }
 
@@ -206,13 +270,18 @@
                                     // tai sao dung session
                                     sessionStorage.setItem("codeNlu" , responseData.data.RE_LOGIN_CODE);
                                     sessionStorage.setItem("success", responseData.status);
-                                    sessionStorage.setItem("name", user);
                                     navigate("/home");
+                                    handGetUserList();
                                 }else {
                                   setErrorMsg("Đăng nhập không thành công");
                                 }
-                      if(responseData.data === "LOGOUT" && responseData.status === "success" ){
-
+                      if(responseData.event === "LOGOUT" && responseData.status === "success" &&responseData.data === "You are Logout!" ){
+                          setIsLoginSuccess(false);
+                          const newSocket = new WebSocket("ws://140.238.54.136:8080/chat/chat");
+                          setSocket(newSocket);
+                          setErrorMsg("")
+                          handGetUserList();
+                          navigate("/login");
                         }
 
                                 // get room chat mess
@@ -221,7 +290,22 @@
                                 const name = sessionStorage.getItem("name");
                                 handJoinRoom(room);
                             }
+                            // ma relogin chi ddung 1 lan
+                            // relogin
+                            if(responseData.event ==="RE_LOGIN"  && responseData.status === "success"){
+                                setIsLoginSuccess(true);
+                                handGetUserList();
+                                const room = localStorage.getItem("nameRoom");
+                                handJoinRoom(room);
+                            }
+                            // relogin het thoi gian
+                            if(responseData.event === "RE_LOGIN" && responseData.status ===
+                                "error" && responseData.mes === "Re-Login error, Code error or you are overtime to relogin!"){
+                                setIsLoginSuccess(false);
+                                setErrorMsg("");
 
+
+                            }
                             // gửi tin nhắn thành công
                             if (responseData.event === "SEND_CHAT" && responseData.status === "success"){
                                 setisMess(true);
@@ -234,7 +318,14 @@
                                 const room = localStorage.getItem("nameRoom");
                                 handJoinRoom(room);
                             }
+// joinroom
+                            if (responseData.event === "JOIN_ROOM" && responseData.status === "success") {
+                                localStorage.setItem("nameRoom", responseData.data.name);
+                                setMessege(responseData.data.chatData);
+                                localStorage.setItem("ownner", responseData.data.own);
+                                const ownner = localStorage.getItem("ownner");
 
+                            }
                              // check user
                             if (responseData.event === "CHECK_USER" && responseData.status === "success"){
                                 console.log(responseData.data.status);
@@ -243,6 +334,7 @@
                             // lay ra danh sach nguoi dung, phong
                             if (responseData.event === "GET_USER_LIST" && responseData.status === "success"){
                                 console.log(responseData.data);
+                                setRoomList(responseData.data);
                             }
                         }
                     }
@@ -252,96 +344,24 @@
                     <div>
                             <div>
                                 {isLoginSuccess == true&&
-                                    <div className="container1">
-                                        {/*Header chat*/}
-
-                                       <div className="left-sidebar">
-                                           <div className="header-chat">
-                                               <div className="user-avatar">
-                                                   <img src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg" className="img-cover"/>
-                                               </div>
-                                               <ul className="icon-nav">
-                                                   <li>
-                                                       <i className="fa-solid fa-border-all"></i>
-                                                   </li>
-                                                   <li>
-                                                       <i className="fa-solid fa-video"></i>
-                                                   </li>
-                                                   <li>
-                                                       <i className="fa-solid fa-ellipsis-vertical"></i>
-                                                   </li>
-                                               </ul>
-                                           </div>
-
-                                            {/*search chat*/}
-                                           <div className="search-chat">
-                                               <i className="fa-solid fa-magnifying-glass"></i>
-                                               <div><input type="text" placeholder="Search or start new chat" fdprocessedid="hss68p"/>
-                                               </div>
-                                           </div>
-
-                                           {/*Chat list*/}
-                                           <div className="box-chat active">
-                                               <div className="img-userchat">
-                                                   <img src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg" className="img-cover"/>
-                                               </div>
-                                               <div className="details">
-                                                   <div className="headerlist">
-                                                       <p>Huỳnh Anh Tài</p>
-                                                   </div>
-                                               </div>
-                                           </div>
-                                           <div className="chat-input-left">
-                                               <input type="text" placeholder="Type a massage"/>
-                                               <i className="fa-solid fa-square-plus"></i>
-                                           </div>
-
-                                       </div>
-
-                                        <div className="right-sidebar">
-                                            {/*Header chat*/}
-                                            <div class="header-chat">
-                                                <div class="imgtext">
-                                                    <div class="user-avatar">
-                                                        <img src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg" className="img-cover"/>
-                                                    </div>
-                                                    <i className="fa-solid fa-user-plus"></i>
-                                                    <p>Huỳnh Anh Tài<br /><span>online</span></p>
-                                                </div>
-                                                <ul className="icon-nav">
-                                                    <li>
-                                                        <i className="fa-solid fa-magnifying-glass"></i>
-                                                    </li>
-                                                    <li>
-                                                        <i className="fa-solid fa-ellipsis-vertical"></i>
-                                                    </li>
-                                                    <li>
-                                                        <span className="logout">Đăng xuất</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div className="search-chat">
-                                                <i className="fa-solid fa-chevron-right"></i>
-                                                <div><input type="text" placeholder="Check User" fdprocessedid="hss68p"/>
-                                                </div>
-                                            </div>
-                                            {/*Chat box*/}
-                                            <div className="chatbox">
-                                                <div className="mess mymess">
-                                                    <p>Chào bạn <br/><span>21:15</span></p>
-                                                </div>
-
-                                            </div>
-
-                                            <div class="chat-input-right">
-                                                <i className="fa-regular fa-face-smile"></i>
-                                                <i className="fa-solid fa-paperclip"></i>
-                                                <input type="text" placeholder="Type a massage"/>
-                                                <i className="fa-solid fa-paper-plane"></i>
-                                            </div>
-                                        </div>
-
-                                    </div>
+                                  <Room
+                                      user={user}
+                                      handLougout={handLougout}
+                                      handPosClick={handlePosClick}
+                                      isEmojiPickerVisible={isEmojiPickerVisible}
+                                      handleEmojiClick={handleEmojiClick}
+                                      roomList ={roomList}
+                                      setRoomList ={setRoomList}
+                                      handCreateRoom={handCreateRoom}
+                                      handJoinRoom={handJoinRoom}
+                                      roomName={roomName}
+                                      setRoomName={setRoomName}
+                                      handleImageChange={handleImageChange}
+                                      messenger={messenger}
+                                      setMess={setMess}
+                                      handTwoClick={handTwoClick}
+                                      messege={messege}
+                                  />
                                 }
                                 {isLoginSuccess == false &&
                                         <LoginForm
