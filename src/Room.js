@@ -4,7 +4,6 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSquarePlus} from "@fortawesome/free-solid-svg-icons";
 import './room.css'
 
-
 export default class Room extends React.Component{
     render() {
         sessionStorage.setItem("mesnam", this.props.user);
@@ -34,35 +33,41 @@ export default class Room extends React.Component{
                        </div>
                         <ul className="icon-nav">
                             <li>
-                                <i className="fa-solid fa-border-all"></i>
+                                <ion-icon name="scan-circle-outline" role="img" className="md hydrated" aria-label="scan circle outline">
+                                </ion-icon>
                             </li>
                             <li>
-                                <i className="fa-solid fa-video"></i>
+                                <ion-icon name="videocam-outline" role="img" className="md hydrated" aria-label="chatbox">
+                                </ion-icon>
                             </li>
                             <li>
-                                <i className="fa-solid fa-ellipsis-vertical"></i>
+                                <div id="componet">
+                                    <ion-icon name="ellipsis-vertical" role="img" className="md hydrated" aria-label="ellipsis vertical">
+                                    </ion-icon>
+                                </div>
                             </li>
                         </ul>
+
                     </div>
 
                     {/*search chat*/}
                     <div className="search-chat">
-                        <i className="fa-solid fa-magnifying-glass"></i>
-                        <div><input type="text" placeholder="Search or start new chat" fdprocessedid="hss68p"/>
+                        <div>
+                            <input type="text" placeholder="Search or start new chat" fdprocessedid="hss68p"/>
+                            <ion-icon name="search-outline" role="img" className="md hydrated" aria-label="search outline">
+                            </ion-icon>
                         </div>
                     </div>
 
                     {/*Chat list*/}
                     <div className="list-chat">
 
-
                         <div>
                             <div>
 
                                 {this.props.roomList.map((room, index) => (
-                                    <div className="group"  >
-
-                                        {room.name !== "20130423" && room.name !=="sassd" && room.name !== "" && room.name !== "2324322" && room.name !== "Thu?n ??ng c?p" && room.name !== "Nhom 11 _Da Cap" && room.name !== "12314141"
+                                    <div className="group" >
+                                        {room.name !== "20130388" && room.name !=="sassd" && room.name !== "" && room.name !== "2324322" && room.name !== "Thu?n ??ng c?p" && room.name !== "Nhom 11 _Da Cap" && room.name !== "12314141"
                                         && room.name !== "hello" && room.name !== "3252523232" && room.name !== "3252523" && room.name !== "231121312" && room.name !== "22222222" && room.name !== "124135462" && room.name !== "111111111" && room.name !== "2222222222" ? (
                                             <h6 key={index}>
                                                 <div className="imgtext1" onClick={() => this.props.handJoinRoom(room.name)}>
@@ -119,7 +124,7 @@ export default class Room extends React.Component{
                         </div>
 
                         {/*logout*/}
-                        <button className={"logout"} onClick={this.props.handLougout}>Đăng xuất</button>
+                        <li className={"logout"} onClick={this.props.handLougout}>Đăng xuất</li>
                     </div>
 
                     {/*Check User*/}
@@ -131,93 +136,104 @@ export default class Room extends React.Component{
 
                     {/*Chat box*/}
                     <div className="chatbox">
-
                         <div>
-                            {sortMess.map((message, index) =>  (
-                                <div>
-                                    <div>
-                                        {message.name === "20130423" && !message.mes.startsWith("https") &&
-                                            <div className={"mess frmess"}>
-                                                <h6>
-                                                    <h6 key={index}>
-                                                        <img src="https://i.pinimg.com/564x/b1/78/32/b17832ed39fd47db601a525e963050a2.jpg" className={"messFr"}></img>
-                                                        <h6>{message.name}</h6>
-                                                        <p>{decodeURIComponent(message.mes)}<br/>
-                                                            <span>{message.createAt}</span></p>
-                                                    </h6>
-                                                </h6>
-                                            </div>
-                                        }
-                                    </div>
-                                    <div>
-                                        {message.name === "20130433" && !message.mes.startsWith("https") &&
-                                            <div className={"mess frmess"}>
-                                                <h6>
-                                                    <h6 key={index}>
-                                                        <img src="https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg" className={"messFr"}></img>
-                                                        <h6>{message.name}</h6>
-                                                        <p>{decodeURIComponent(message.mes)}<br/>
-                                                            <span>{message.createAt}</span></p>
-                                                    </h6>
-                                                </h6>
-                                            </div>
-                                        }
-                                    </div>
-                                    <div>
-                                        {message.name === "20130388" && !message.mes.startsWith("https") &&
-                                            <div className={"mess mymess"}>
-                                                <h6>
-                                                    <h6 key={index}>
-                                                        <img src={"https://timanhdep.com/wp-content/uploads/2022/06/hinh-nen-cute-anh-nen-cute-dang-yeu-nhat-the-gioi-01.jpg"}></img>
-                                                        <h6>{message.name}</h6>
-                                                        <p>{decodeURIComponent(message.mes)}<br/>
-                                                        <span>{message.createAt}</span></p>
-                                                    </h6>
-                                                </h6>
-                                            </div>
-                                        }
-                                    </div>
+                            {sortMess.map((message, index) => (
 
                                     <div>
-                                        {message.name === "20130423" && message.mes.startsWith("https") || message.name === "20130433" && message.mes.startsWith("https") &&
-                                        <div className={"mess frmess"}>
-                                            <h6>
-                                                <h6 key={index}>
-                                                    <img src={"https://i.pinimg.com/564x/b1/78/32/b17832ed39fd47db601a525e963050a2.jpg"} className={'messFr'}></img>
-                                                    <h6>{message.name}</h6>
-                                                    <p>
-                                                        <a href={decodeURIComponent(message.mes)} target={"_blank"} onClick={(event) =>{
-                                                        event.preventDefault();
-                                                        window.open(decodeURIComponent(message.mes))}
-                                                        }>{decodeURIComponent(message.mes)}</a>
-                                                        <br/> <span>{message.createAt}</span>
-                                                    </p>
-                                                </h6>
-                                            </h6>
-
+                                        <div>
+                                            {message.name === "20130433" && !message.mes.startsWith("https") &&
+                                                <div className="mess frnmess">
+                                                    <h6>
+                                                        <h6 key={index}>
+                                                            <img src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className={'messFr'}></img>
+                                                            <h6>{message.name}</h6>
+                                                            <p>{decodeURIComponent(message.mes)}
+                                                                <br/><span>{message.createAt}</span></p>
+                                                        </h6>
+                                                    </h6>
+                                                </div>
+                                            }
                                         </div>
-                                        }
-                                    </div>
-                                    <div>
-                                        {message.name === "20130388" && message.mes.startsWith("https") &&
-                                        <div className={"mess mymess"}>
-                                            <h6>
-                                                <h6 key={index}>
-                                                    <img src={"https://timanhdep.com/wp-content/uploads/2022/06/hinh-nen-cute-anh-nen-cute-dang-yeu-nhat-the-gioi-01.jpg"}></img>
-                                                    <h6>{message.name}</h6>
-                                                    <p><a href={decodeURIComponent(message.mes)} target="_blank"
-                                                          onClick={(event) => {
-                                                              event.preventDefault();
-                                                              window.open(decodeURIComponent(message.mes))
-                                                          }}>{decodeURIComponent(message.mes)}</a>
-                                                        <br/><span>{message.createAt}</span></p>
-                                                </h6>
-                                            </h6>
-                                        </div>}
+                                        <div>
+                                            {message.name === "20130423" && !message.mes.startsWith("https") &&
+                                                <div className="mess frnmess">
+
+                                                    <h6>
+                                                        <h6 key={index}>
+                                                            <img src={"https://i.pinimg.com/564x/b1/78/32/b17832ed39fd47db601a525e963050a2.jpg"} className={'messFr'}></img>
+                                                            <h6>{message.name}</h6>
+                                                            <p>{decodeURIComponent(message.mes)}
+                                                                <br/><span>{message.createAt}</span></p>
+                                                        </h6>
+                                                    </h6>
+
+                                                </div>
+                                            }
+                                        </div>
+                                        {/* 22*/}
+                                        <div>
+                                            {message.name === "20130388" && !message.mes.startsWith("https") &&
+                                                <div className="mess mymess">
+                                                    <h6>
+                                                        <h6 key={index}>
+                                                            <img src={"https://timanhdep.com/wp-content/uploads/2022/06/hinh-nen-cute-anh-nen-cute-dang-yeu-nhat-the-gioi-01.jpg"}></img>
+                                                            <h6>{message.name}</h6>
+                                                            <p>{decodeURIComponent(message.mes)}
+                                                                <br/><span>{message.createAt}</span></p>
+                                                        </h6>
+                                                    </h6>
+                                                </div>
+                                            }
+                                        </div>
+
+                                        <div>
+                                            {message.name === "20130423" && message.mes.startsWith("https") || message.name === "20130433" && message.mes.startsWith("https") &&
+
+                                                <div className="mess frnmess">
+
+                                                    <h6>
+                                                        <h6 key={index}>
+
+                                                            <h6>{message.name}</h6>
+                                                            <p><a href={decodeURIComponent(message.mes)} target="_blank"
+                                                                  onClick={(event) => {
+                                                                      event.preventDefault();
+                                                                      window.open(decodeURIComponent(message.mes))
+                                                                  }}>{decodeURIComponent(message.mes)}</a>
+                                                                <br/><span>{message.createAt}</span></p>
+                                                        </h6>
+                                                    </h6>
+
+                                                </div>
+                                            }
+                                        </div>
+                                        {/*    */}
+                                        <div>
+                                            {message.name === "20130388" && message.mes.startsWith("https") &&
+                                                <div className="mess mymess">
+                                                    <h6>
+                                                        <h6 key={index}>
+                                                            <h6>{message.name}</h6>
+                                                            <p><a href={decodeURIComponent(message.mes)} target="_blank"
+                                                                  onClick={(event) => {
+                                                                      event.preventDefault();
+                                                                      window.open(decodeURIComponent(message.mes))
+                                                                  }}>{decodeURIComponent(message.mes)}</a>
+                                                                <br/><span>{message.createAt}</span></p>
+                                                        </h6>
+                                                    </h6>
+                                                </div>
+                                            }
+                                        </div>
                                     </div>
 
-                                </div>
-                            ))}
+                                )
+                            )
+                            }
+                            {/*<div>*/}
+                            {/*    <button onClick={()=> this.props.chatMessPeopleTwo( username, nameRoom)}>Ha</button>*/}
+
+                            {/*</div>*/}
                         </div>
 
                     </div>
@@ -231,19 +247,14 @@ export default class Room extends React.Component{
                         <i className="fa-solid fa-paper-plane"></i>
                     </div>
 
-                    <div>
-                        <main>
-                            <input type="{file}" accept={"image/*"} className={"input-field"} hidden
-                            onChange={this.props.handleImageChange}/>
-                            <ion-icon onClick={() => document.querySelector(".input-field").click()}
-                                      name="attach-outline" role="img" className="md hydrated" aria-label="attach outline">
-                            </ion-icon>
-                        </main>
-
-                        <input type="text" placeholder="Type a message" value={this.props.messenger}
-                        onChange={(e) => this.props.setMess(e.target.value)} fdprocessedid="61a96k"/>
-                        <ion-icon onClick={() => this.props.handTwoClick(nameRoom)} name="send" role="img" className="md hydrated" aria-label="send"></ion-icon>
-                    </div>
+                    <input type="text" placeholder="Type a message" value={this.props.messenger}
+                           onChange={(e) => this.props.setMess(e.target.value)} onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                            this.props.twoMessChat(nameRoom);
+                        }
+                    }} fdprocessedid="61a96k"/>
+                    <ion-icon onClick={() => this.props.twoMessChat(nameRoom)} name="send" role="img"
+                              className="md hydrated" aria-label="send">hello</ion-icon>
                 </div>
                 <div className="icon_Emoid">
                     {this.props.isEmojiPickerVisible && (
