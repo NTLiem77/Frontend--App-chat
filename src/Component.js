@@ -8,6 +8,7 @@
 
             import LoginForm from "./LoginForm";
             import Room from "./Room";
+            import {navigate} from "ionicons/icons";
             const Component = () =>{
                 const [socket, setSocket] = useState(null);
                 const [user, setUser] = useState("");
@@ -20,6 +21,7 @@
                 const [roomName, setRoomName] = useState("");
                 const [messege, setMessege] = useState([]);
                 const [isMessenger, setisMess] = useState(false);
+                const navigate = useNavigate();
 
                 // khi component được taạo thiết lập kết nối websocket
                 useEffect(() =>{
@@ -205,6 +207,7 @@
                                     sessionStorage.setItem("codeNlu" , responseData.data.RE_LOGIN_CODE);
                                     sessionStorage.setItem("success", responseData.status);
                                     sessionStorage.setItem("name", user);
+                                    navigate("/home");
                                 }else {
                                   setErrorMsg("Đăng nhập không thành công");
                                 }
@@ -317,14 +320,16 @@
                                                     </li>
                                                 </ul>
                                             </div>
-                                            <div className="search-chat none">
-                                                <input type="text" placeholder="Check user" fdprocessedid="hss68p" value=""/>
-                                                <div className="icon-checkUser">
-                                                    <i className="fa-solid fa-chevron-right"></i>
+                                            <div className="search-chat">
+                                                <i className="fa-solid fa-chevron-right"></i>
+                                                <div><input type="text" placeholder="Check User" fdprocessedid="hss68p"/>
                                                 </div>
                                             </div>
                                             {/*Chat box*/}
                                             <div className="chatbox">
+                                                <div className="mess mymess">
+                                                    <p>Chào bạn <br/><span>21:15</span></p>
+                                                </div>
 
                                             </div>
 
@@ -332,12 +337,11 @@
                                                 <i className="fa-regular fa-face-smile"></i>
                                                 <i className="fa-solid fa-paperclip"></i>
                                                 <input type="text" placeholder="Type a massage"/>
-                                                <i className="fa-solid fa-microphone"></i>
+                                                <i className="fa-solid fa-paper-plane"></i>
                                             </div>
                                         </div>
 
                                     </div>
-
                                 }
                                 {isLoginSuccess == false &&
                                         <LoginForm
@@ -348,8 +352,6 @@
                                             handleLogin = {handleLogin}
                                             errorMsg={errorMsg}
                                         />
-
-
                                 }
                             </div>
                     </div>
