@@ -4,9 +4,7 @@ export default class LoginForm extends React.Component {
     render() {
         return
         <div>
-            <div className="card-header">
-                <h2>User Login</h2>
-            </div>
+
         </div>
     }
 }
