@@ -5,6 +5,13 @@
             import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
             import './room.css'
 
+            import {useNavigate} from "react-router-dom";
+            import React, {useState, useEffect} from "react";
+            import {w3cwebsocket} from "websocket";
+
+            import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+            import './room.css'
+
 
             import LoginForm from "./LoginForm";
             import Room from "./Room";
@@ -72,17 +79,8 @@
 
                     };
                 },[]);
-// xét lại giá tra (mặc định là false);
-                const handlePosClick = () => {
-                    setEmojiPickerVisible(!isEmojiPickerVisible);
-                };
-// clcik chọn emoij
-                const handleEmojiClick = (emoji) => {
-                    setSelectedEmoji(emoji.emoji); // chọn emoij
-                    // thêm nhiều emoij + vào trong mess -> xét lại các giá trị
-                    setMess(messenger + emoji.emoji);
 
-                };
+
                 // xử lý đăng nhập
                 const handleLogin = () => {
                     // gửi yêu cầu đăng nhập đến server socket
@@ -118,33 +116,28 @@
                               data: {
                                   name: roomName,
                               },
-                          },
-                      };
-                      socket.send(JSON.stringify(data));
+                          }
+                      }
+                      socket.send(socket.stringify(data));
                   }
                 }
-
-
             //xử lý join room
-                const handJoinRoom = (roomName) => {
+             const    handJoinRoom = (roomName) => {
+                 if (socket) {
+                     const joinroom = {
+                         action: "onchat",
+                         data: {
+                             event: "JOIN_ROOM",
+                             data: {
+                                 name: roomName
+                             }
+                         },
+                     }
+                     socket.send(socket.stringify(joinroom));
+                 }
+             }
 
-                    if (socket) {
-                        const joinRoom = {
-                            action: "onchat",
-                            data: {
-                                event: "JOIN_ROOM",
-                                data: {
-                                    name: roomName
-                                }
-                            },
-                        }
-
-                        socket.send(JSON.stringify(joinRoom));
-                    }
-
-                }
-
-                // get room mess chat
+            // get room mess chat
                 const get_room_mess_chat = (roomName) => {
                     if(socket) {
                         const getroom = {
@@ -163,24 +156,19 @@
 
                 // send chat room
                 const messchat = (roomName) => {
-                    return new Promise((resolve) => {
-                        if (socket) {
+                    return new Promise(resolve => {
+                        if(socket){
                             const mess1 = {
-                                action: "onchat",
-                                data: {
-                                    event: "SEND_CHAT",
-                                    data: {
-                                        type: "room",
-                                        to: roomName,
-                                        mes: encodeURIComponent(messenger)
-                                    }
+                                action: "SEND_CHAT",
+                                data:{
+                                    type: "room",
+                                    to: roomName,
+                                    mes: encodeURIComponent(messenger)
                                 }
-                            }
 
-                            socket.send(JSON.stringify(mess1));
-                            resolve();
+                            }
                         }
-                    });
+                    })
                 }
 
                 const twoMessChat = (roomName) =>{
@@ -205,26 +193,22 @@
                 }
 
                 // send chat people
-                const messPeople = (user) => {
-                    if (socket) {
-                        return new Promise((resolve) => {
-                                const people = {
-                                    action: "onchat",
-                                    data: {
-                                        event: "SEND_CHAT",
-                                        data: {
-                                            type: "people",
-                                            to: user,
-                                            mes: encodeURIComponent(messenger)
-                                        }
-                                    }
+                const messPeople = (user) =>{
+                    if (socket){
+                        const people = {
+                            action: "onchat",
+                            data: {
+                                event: "SEND_CHAT",
+                                data: {
+                                    type: "people",
+                                    to: user,
+                                    mes: encodeURIComponent(messenger)
                                 }
-                                setMessege(prevMessages => [...prevMessages, , messenger]);
-                                socket.send(JSON.stringify(people));
-                                resolve();
                             }
-                        )}
-
+                        }
+                        setMessege(prevMessages => [...prevMessages,  , messenger]);
+                        socket.send(JSON.stringify(people));
+                    }
                 }
 
             // check user
@@ -252,28 +236,79 @@
                                 event: "GET_USER_LIST"
                             }
                         }
-                        socket.send(JSON.stringify(getUser));// chuyen ve chuoi  - gui den socket
                     }
                 }
-                function file(event) {
-                    const file = event.target.files[0];
-                    setMess(file.name);
-                }
 
-                // file đang làm
-                function handleImageChange({target: {files}}){
-                    if (files && files[0]){
-                        setFileName(files[0].name);
-                        setImage(URL.createObjectURL(files[0]));
-                        setMess(fileName);
+                // sau khi kết nối websocket thành công
+                useEffect(() => {
+                    if (socket){
+                        socket.onmessage = (event) =>{
+                            const responseData = JSON.parse(event.data);
+                                if (responseData && responseData.event === "LOGIN" && responseData.status === "success"){
+                                    // đăng nhập thành công
+                                    setIsLoginSuccess(true);
+                                    // lưu trữ thông tin đăng nhập
+                                    setToken(responseData.data.tokens);
+                                    // luu tru RE_LOGIN_CODE
+                                    // tai sao dung session
+                                    sessionStorage.setItem("codeNlu" , responseData.data.RE_LOGIN_CODE);
+                                    sessionStorage.setItem("success", responseData.status);
+
+                                    navigate("/home");
+                                    handGetUserList();
+                                }else {
+                                  setErrorMsg("Đăng nhập không thành công");
+                                }
+                      if(responseData.event === "LOGOUT" && responseData.status === "success" &&responseData.data === "You are Logout!" ){
+                          setIsLoginSuccess(false);
+                          const newSocket = new WebSocket("ws://140.238.54.136:8080/chat/chat");
+                          setSocket(newSocket);
+                          setErrorMsg("")
+                          navigate("/login");
+                        }
+
+                                // get room chat mess
+                            if(responseData.event === "GET_ROOM_CHAT_MES" && responseData.status === "success"){
+                                const  room = localStorage.getItem("nameRoom");
+                                const name = sessionStorage.getItem("name");
+                                handJoinRoom(room);
+                            }
+                            // ma relogin chi ddung 1 lan
+                            // relogin
+                            if(responseData.event ==="RE_LOGIN"  && responseData.status === "success"){
+                                setIsLoginSuccess(true);
+                            }
+                            // relogin het thoi gian
+                            if(responseData.event === "RE_LOGIN" && responseData.status ===
+                                "error" && responseData.mes === "Re-Login error, Code error or you are overtime to relogin!"){
+                                setIsLoginSuccess(false);
+                                setErrorMsg("");
+                            }
+                            // gửi tin nhắn thành công
+                            if (responseData.event === "SEND_CHAT" && responseData.status === "success"){
+                                setisMess(true);
+                                localStorage.setItem("mes", responseData.data.mes);
+                                localStorage.setItem("messname", responseData.data.name);
+                                console.log(responseData.chatData);
+                                setMess("");
+                                // để hiển thị danh sách thì ta phải lập lại việc join room trước đó
+                                // lấy giá tr của room đã lưu tr dựa vào handJoinRoom(room)
+                                const room = localStorage.getItem("nameRoom");
+                                handJoinRoom(room);
+                            }
+
+                             // check user
+                            if (responseData.event === "CHECK_USER" && responseData.status === "success"){
+                                console.log(responseData.data.status);
+                            }
+
+                            // lay ra danh sach nguoi dung, phong
+                            if (responseData.event === "GET_USER_LIST" && responseData.status === "success"){
+                                console.log(responseData.data);
+                            }
+                        }
                     }
-                }
-                const [nameVideoRoom, setNameVideoRoom] = useState("VideoCall")
-                // video call
-                const handleVideoCall = useCallback(() => {
-                        navigate(`/room/${nameVideoRoom}`);
-                }, [navigate,nameVideoRoom])
-
+                },[socket,setIsLoginSuccess])
                 // sau khi kết nối websocket thành công
                 useEffect(() => {
                     if (socket){

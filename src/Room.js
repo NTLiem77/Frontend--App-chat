@@ -25,12 +25,6 @@ export default class Room extends React.Component{
 
         const mesnam =  sessionStorage.getItem("mesnam");
         const username =  sessionStorage.getItem("name1");
-        // lay ten phong
-        const nameRoom = localStorage.getItem("nameRoom");
-
-        const chatData = localStorage.getItem("own");
-        const sortMess = this.props.messege.sort((a, b) => a.id - b.id);
-        const ownner = localStorage.getItem("ownner");
         return <div>
 
             <div className="container1">
@@ -48,101 +42,71 @@ export default class Room extends React.Component{
                        </div>
                         <ul className="icon-nav">
                             <li>
-                                <ion-icon name="scan-circle-outline" role="img" className="md hydrated" aria-label="scan circle outline">
-                                </ion-icon>
+                                <i className="fa-solid fa-border-all"></i>
                             </li>
                             <li>
-                                <ion-icon name="videocam-outline" role="img" className="md hydrated" aria-label="chatbox">
-                                </ion-icon>
+                                <i className="fa-solid fa-video"></i>
                             </li>
                             <li>
-                                <div id="componet">
-                                    <ion-icon name="ellipsis-vertical" role="img" className="md hydrated" aria-label="ellipsis vertical">
-                                    </ion-icon>
-                                </div>
+                                <i className="fa-solid fa-ellipsis-vertical"></i>
                             </li>
                         </ul>
-
                     </div>
 
                     {/*search chat*/}
                     <div className="search-chat">
-                        <div>
-                            <input className="pointer" type="text" placeholder="Search or start new chat" fdprocessedid="hss68p"/>
-                            <ion-icon name="search-outline" role="img" className="md hydrated" aria-label="search outline">
-                            </ion-icon>
+                        <i className="fa-solid fa-magnifying-glass"></i>
+                        <div><input type="text" placeholder="Search or start new chat" fdprocessedid="hss68p"/>
                         </div>
                     </div>
 
                     {/*Chat list*/}
-                    <div className="list-chat">
-                        <div>
-                            <div>
-                                {this.props.roomList.map((room, index) => (
-                                    <div className="group" >
-                                        {room.name !== "20130388" && room.name !=="sassd" && room.name !== "" && room.name !== "2324322" && room.name !== "Thu?n ??ng c?p" && room.name !== "Nhom 11 _Da Cap" && room.name !== "12314141"
-                                        && room.name !== "hello" && room.name !== "3252523232" && room.name !== "3252523" && room.name !== "231121312" && room.name !== "22222222" && room.name !== "124135462" && room.name !== "111111111" && room.name !== "2222222222" ? (
-                                            <h6 key={index}>
-                                                <div className="imgtext1" onClick={() => this.props.handJoinRoom(room.name)}>
-                                                    <div className="user-avatar"><img
-                                                        src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg"
-                                                        className="img-cover"/></div>
-                                                    <p className="author_mess">{room.name}</p>
-                                                </div>
-                                            </h6>
-
-                                        ) : (null)
-
-                                        }
-                                    </div>
-                                ))}
+                    <div className="box-chat active">
+                        <div className="img-userchat">
+                            <img src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg"
+                                 className="img-cover"/>
+                        </div>
+                        <div className="details">
+                            <div className="headerlist">
+                                <p>Huỳnh Anh Tài</p>
                             </div>
                         </div>
-
-
                     </div>
-                    <div className="chat-input-left pointer">
-                        <input className="pointer" type="text" value={this.props.roomName}
-                                onChange={(e) => this.props.setRoomName(e.target.value)}
-                                placeholder="Nhập tên phòng"/>
-                        <div onClick={this.props.handCreateRoom}>
-                            <FontAwesomeIcon icon="fa-sharp fa-light fa-square-plus"/><FontAwesomeIcon icon={faSquarePlus}/>
-                        </div>
+                    <div className="chat-input-left">
+                        <input type="text" placeholder="Type a massage"/>
+                        <i className="fa-solid fa-square-plus"></i>
                     </div>
 
                 </div>
-                {/*Phần chat*/}
+
                 <div className="right-sidebar">
                     {/*Header chat*/}
                     <div className="header-chat">
-                        <div className={"imgtext"}>
-                            <div className={"user-avatar"}>
-                                <img src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg" className={"img-cover"}/>
+                        <div className="imgtext">
+                            <div className="user-avatar">
+                                <img src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg"
+                                     className="img-cover"/>
                             </div>
-
-                            <div>
-                                <ion-icon name={"person-add-outline"} role={"img"} className ="md hydrated" aria-label={"person-add-outline"}></ion-icon>
-                            </div>
-
-                            <p className={"author_mess"}>{nameRoom}<br/>
-                            <span>Online</span></p>
+                            <i className="fa-solid fa-user-plus"></i>
+                            <p>Huỳnh Anh Tài<br/><span>online</span></p>
                         </div>
-
                         <ul className="icon-nav">
-                            <li onClick={this.props.handleVideoCall}>
-                                <i className="fa-solid fa-video"></i>
+                            <li>
+                                <i className="fa-solid fa-magnifying-glass"></i>
                             </li>
-                            <li className="lougout" onClick={this.props.handLougout}>Đăng xuất</li>
+                            <li>
+                                <i className="fa-solid fa-ellipsis-vertical"></i>
+                            </li>
+                            <li>
+                                <span onClick={ this.props.handLougout} className="logout">Đăng xuất</span>
+                            </li>
                         </ul>
                     </div>
-
-                    {/*Check User*/}
-                    <div className="search-chat pointer">
+                    <div className="search-chat">
                         <i className="fa-solid fa-chevron-right"></i>
-                        <div><input className="pointer" type="text" placeholder="Check User" fdprocessedid="hss68p"/>
+                        <div><input type="text" placeholder="Check User" fdprocessedid="hss68p"/>
                         </div>
                     </div>
-
                     {/*Chat box*/}
                     <div className="chatbox">
                         <div>
@@ -275,4 +239,5 @@ export default class Room extends React.Component{
                      </div>
                  </div>
     }
+
 }
