@@ -2,7 +2,13 @@
             import React, {useState, useEffect} from "react";
             import {w3cwebsocket} from "websocket";
 
+            import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+            import './room.css'
+
+
             import LoginForm from "./LoginForm";
+            import Room from "./Room";
+            import {navigate} from "ionicons/icons";
             const Component = () =>{
                 const [socket, setSocket] = useState(null);
                 const [user, setUser] = useState("");
@@ -15,8 +21,10 @@
                 const [roomName, setRoomName] = useState("");
                 const [messege, setMessege] = useState([]);
                 const [isMessenger, setisMess] = useState(false);
+                const navigate = useNavigate();
 
                 // khi component được taạo thiết lập kết nối websocket
+                const mesnam=  sessionStorage.getItem("mesnam");
                 useEffect(() =>{
                     const newSocket = new WebSocket("ws://140.238.54.136:8080/chat/chat");
 
@@ -24,6 +32,29 @@
                         console.log("Kết nối websocket đã được thiết lập", event);
                         setSocket(newSocket);
                     })
+                   const susscess =sessionStorage.getItem("success");
+                    if(susscess=== "success"){
+                        sessionStorage.setItem("name1", mesnam);
+                        const nlu = sessionStorage.getItem("codeNlu");
+                        newSocket.onopen = function () {
+                            const relogin = {
+                                action: "onchat",
+                                data: {
+                                    event: "RE_LOGIN",
+                                    data: {
+                                        user: mesnam,
+                                        code: nlu
+                                    }
+                                }
+                            }
+                            newSocket.send(JSON.stringify(relogin));
+                        }
+                    }
+                    return () => {
+                        console.log("Closing WebSocket connection...");
+                        newSocket.close();
+
+                    };
                 },[]);
 
 
@@ -199,12 +230,18 @@
                                     // tai sao dung session
                                     sessionStorage.setItem("codeNlu" , responseData.data.RE_LOGIN_CODE);
                                     sessionStorage.setItem("success", responseData.status);
-                                    sessionStorage.setItem("name", user);
+
+                                    navigate("/home");
+                                    handGetUserList();
                                 }else {
                                   setErrorMsg("Đăng nhập không thành công");
                                 }
-                      if(responseData.data === "LOGOUT" && responseData.status === "success" ){
-
+                      if(responseData.event === "LOGOUT" && responseData.status === "success" &&responseData.data === "You are Logout!" ){
+                          setIsLoginSuccess(false);
+                          const newSocket = new WebSocket("ws://140.238.54.136:8080/chat/chat");
+                          setSocket(newSocket);
+                          setErrorMsg("")
+                          navigate("/login");
                         }
 
                                 // get room chat mess
@@ -213,7 +250,17 @@
                                 const name = sessionStorage.getItem("name");
                                 handJoinRoom(room);
                             }
-
+                            // ma relogin chi ddung 1 lan
+                            // relogin
+                            if(responseData.event ==="RE_LOGIN"  && responseData.status === "success"){
+                                setIsLoginSuccess(true);
+                            }
+                            // relogin het thoi gian
+                            if(responseData.event === "RE_LOGIN" && responseData.status ===
+                                "error" && responseData.mes === "Re-Login error, Code error or you are overtime to relogin!"){
+                                setIsLoginSuccess(false);
+                                setErrorMsg("");
+                            }
                             // gửi tin nhắn thành công
                             if (responseData.event === "SEND_CHAT" && responseData.status === "success"){
                                 setisMess(true);
@@ -244,14 +291,8 @@
                     <div>
                             <div>
                                 {isLoginSuccess == true&&
-                               <div>
-                                   <h1>Thành công</h1>
-                                   <h1 onClick={()=> handLougout()}>Dang xuat</h1>
-
-                               </div>
-
-
-
+                                  <Room   user={user}
+                                          handLougout={handLougout}/>
                                 }
                                 {isLoginSuccess == false &&
                                         <LoginForm
@@ -262,8 +303,6 @@
                                             handleLogin = {handleLogin}
                                             errorMsg={errorMsg}
                                         />
-
-
                                 }
                             </div>
                     </div>
