@@ -239,7 +239,8 @@ export default class Room extends React.Component{
                                     <i className="fa-solid fa-paperclip"  onClick={() => document.querySelector(".input-field").click()}></i>
                                 </div>
                                 <input className="pointer" type="text" placeholder="Type a massage"/>
-                                <i className="fa-solid fa-paper-plane"></i>
+                        <ion-icon onClick={() => this.props.twoMessChat(nameRoom)} name="send" role="img"
+                                  className="md hydrated" aria-label="send"></ion-icon>
                             </div>
 
                             <input type="text" placeholder="Type a message" value={this.props.messenger}
@@ -248,8 +249,7 @@ export default class Room extends React.Component{
                                     this.props.twoMessChat(nameRoom);
                                 }
                             }} fdprocessedid="61a96k"/>
-                            <ion-icon onClick={() => this.props.twoMessChat(nameRoom)} name="send" role="img"
-                                      className="md hydrated" aria-label="send">hello</ion-icon>
+
                         </div>
                         <div className="icon_Emoid">
                             {this.props.isEmojiPickerVisible && (
