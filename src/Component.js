@@ -11,6 +11,10 @@
                 const [token, setToken] = useState("");
                 const [errorMsg, setErrorMsg] = useState("");
                 const [customer, setCutomer] = useState("");
+                const [messenger, setMess] = useState("");
+                const [roomName, setRoomName] = useState("");
+                const [messege, setMessege] = useState([]);
+                const [isMessenger, setisMess] = useState(false);
 
                 // khi component được taạo thiết lập kết nối websocket
                 useEffect(() =>{
@@ -38,6 +42,7 @@
                     };
                     socket.send(JSON.stringify(requestData));
                 }
+                // su kien dang xuat
             const handLougout = () => {
               const eventLougout ={
                   action: "onchat",
@@ -47,6 +52,110 @@
               }
               socket.send(JSON.stringify(eventLougout));
             }
+            // tao phong
+                const handCreateRoom = () => {
+                  if(socket){
+                      const data ={
+                          action: "onchat",
+                          data: {
+                              event: "CREATE_ROOM",
+                              data: {
+                                  name: roomName,
+                              },
+                          }
+                      }
+                      socket.send(socket.stringify(data));
+                  }
+                }
+            //xử lý join room
+             const    handJoinRoom = (roomName) => {
+                 if (socket) {
+                     const joinroom = {
+                         action: "onchat",
+                         data: {
+                             event: "JOIN_ROOM",
+                             data: {
+                                 name: roomName
+                             }
+                         },
+                     }
+                     socket.send(socket.stringify(joinroom));
+                 }
+             }
+
+            // get room mess chat
+                const get_room_mess_chat = (roomName) => {
+                    if(socket) {
+                        const getroom = {
+                            action: "onchat",
+                            data: {
+                                event: "GET_ROOM_CHAT_MES",
+                                data: {
+                                    name: roomName,
+                                    page: 1
+                                }
+                            }
+                        }
+                        socket.send(JSON.stringify(getroom));
+                    }
+                }
+
+                // send chat room
+                const messchat = (roomName) => {
+                    return new Promise(resolve => {
+                        if(socket){
+                            const mess1 = {
+                                action: "SEND_CHAT",
+                                data:{
+                                    type: "room",
+                                    to: roomName,
+                                    mes: encodeURIComponent(messenger)
+                                }
+
+                            }
+                        }
+                    })
+                }
+
+                const twoMessChat = (roomName) =>{
+                    messchat(roomName).then(get_room_mess_chat(roomName));
+                }
+
+                // get people chat mess
+                const GET_PEOPLE_CHAT_MES = () => {
+                    if(socket){
+                        const mess = {
+                            action: "onchat",
+                            data: {
+                                event: "GET_PEOPLE_CHAT_MES",
+                                data: {
+                                    name: roomName,
+                                    page: 1
+                                }
+                            }
+                        }
+                        socket.send(JSON.stringify(mess));
+                    }
+                }
+
+                // send chat people
+                const messPeople = (user) =>{
+                    if (socket){
+                        const people = {
+                            action: "onchat",
+                            data: {
+                                event: "SEND_CHAT",
+                                data: {
+                                    type: "people",
+                                    to: user,
+                                    mes: encodeURIComponent(messenger)
+                                }
+                            }
+                        }
+                        setMessege(prevMessages => [...prevMessages,  , messenger]);
+                        socket.send(JSON.stringify(people));
+                    }
+                }
 
             // check user
                 const checkUser = () =>{
@@ -64,6 +173,18 @@
                     }
                 }
 
+                // lay ra danh sach nguoi dung, phong
+                const handGetUserList = () =>{
+                    if (socket){
+                        const getUser = {
+                            action: "onchat",
+                            data: {
+                                event: "GET_USER_LIST"
+                            }
+                        }
+                    }
+                }
+
                 // sau khi kết nối websocket thành công
                 useEffect(() => {
                     if (socket){
@@ -74,13 +195,46 @@
                                     setIsLoginSuccess(true);
                                     // lưu trữ thông tin đăng nhập
                                     setToken(responseData.data.tokens);
+                                    // luu tru RE_LOGIN_CODE
+                                    // tai sao dung session
+                                    sessionStorage.setItem("codeNlu" , responseData.data.RE_LOGIN_CODE);
+                                    sessionStorage.setItem("success", responseData.status);
+                                    sessionStorage.setItem("name", user);
                                 }else {
-                                    // Đăng nhập thất bại, xử lý lỗi tại đây
+                                  setErrorMsg("Đăng nhập không thành công");
                                 }
+                      if(responseData.data === "LOGOUT" && responseData.status === "success" ){
+
+                        }
+
+                                // get room chat mess
+                            if(responseData.event === "GET_ROOM_CHAT_MES" && responseData.status === "success"){
+                                const  room = localStorage.getItem("nameRoom");
+                                const name = sessionStorage.getItem("name");
+                                handJoinRoom(room);
+                            }
+
+                            // gửi tin nhắn thành công
+                            if (responseData.event === "SEND_CHAT" && responseData.status === "success"){
+                                setisMess(true);
+                                localStorage.setItem("mes", responseData.data.mes);
+                                localStorage.setItem("messname", responseData.data.name);
+                                console.log(responseData.chatData);
+                                setMess("");
+                                // để hiển thị danh sách thì ta phải lập lại việc join room trước đó
+                                // lấy giá tr của room đã lưu tr dựa vào handJoinRoom(room)
+                                const room = localStorage.getItem("nameRoom");
+                                handJoinRoom(room);
+                            }
 
                              // check user
                             if (responseData.event === "CHECK_USER" && responseData.status === "success"){
                                 console.log(responseData.data.status);
+                            }
+
+                            // lay ra danh sach nguoi dung, phong
+                            if (responseData.event === "GET_USER_LIST" && responseData.status === "success"){
+                                console.log(responseData.data);
                             }
                         }
                     }
@@ -89,11 +243,15 @@
                 return(
                     <div>
                             <div>
-                                {(isLoginSuccess == true)&&
-                                            <div>
-                                                <h1>Thanh cong</h1>
-                                                <h4 onClick={()=> handLougout()}>Logout</h4>
-                                            </div>
+                                {isLoginSuccess == true&&
+                               <div>
+                                   <h1>Thành công</h1>
+                                   <h1 onClick={()=> handLougout()}>Dang xuat</h1>
+
+                               </div>
+
+
+
                                 }
                                 {isLoginSuccess == false &&
                                         <LoginForm
