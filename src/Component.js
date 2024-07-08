@@ -13,7 +13,7 @@ const Component = () =>{
 
     // khi component được taạo thiết lập kết nối websocket
     useEffect(() =>{
-        const newSocket = new w3cwebsocket("ws://140.238.54.136:8080/chat/chat");
+        const newSocket = new WebSocket("ws://140.238.54.136:8080/chat/chat");
 
         newSocket.addEventListener("open",(event) =>{
             console.log("Kết nối websocket đã được thiết lập", event);
@@ -37,7 +37,15 @@ const Component = () =>{
         };
         socket.send(JSON.stringify(requestData));
     }
-
+const handLougout = () => {
+  const eventLougout ={
+      action: "onchat",
+      data: {
+          event: "LOGOUT"
+      }
+  }
+  socket.send(JSON.stringify(eventLougout));
+}
     // sau khi kết nối websocket thành công
     useEffect(() => {
         if (socket){
@@ -59,12 +67,13 @@ const Component = () =>{
     return(
         <div>
                 <div>
-                    {(isLoginSuccess == true)?(
+                    {(isLoginSuccess == true)&&
                                 <div>
                                     <h1>Thanh cong</h1>
+                                    <h4 onClick={()=> handLougout()}>Logout</h4>
                                 </div>
-                    ):(
-                        isLoginSuccess == false && (
+                    }
+                    {isLoginSuccess == false &&
                             <LoginForm
                                 user = {user}
                                 setUser = {setUser}
@@ -73,8 +82,9 @@ const Component = () =>{
                                 handleLogin = {handleLogin}
                                 errorMsg={errorMsg}
                             />
-                        )
-                    )}
+
+
+                    }
                 </div>
         </div>
     )
