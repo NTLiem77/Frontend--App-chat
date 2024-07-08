@@ -334,10 +334,6 @@
     bottom: 0;
     margin-top: 10px;
 }
-.chat-input-right .md.hydrated{
-    font-size: 20px;
-    cursor: pointer;
-}
 .chat-input-left{
     width: 100%;
     height: 60px;
@@ -430,38 +426,6 @@
     position: absolute;
     top: 10px;
     left: -20px;
-}
-.group1{
-    margin-left:  50%;
-}
-
-.m_l.call_end {
-    color: red;
-    font-size: 36px;
-}
-p.red-text {
-    color: red;
-}
-.call{
-    font-size: 36px;
-    color: green !important;
-}
-.flex-group{
-    justify-content: space-between;
-
-}
-.m_l{
-    margin-left: -221px;
-
-}
-.user-group1{
-    position: relative;
-    height: 200px;
-    width: 200px;
-    overflow: hidden;
-    border-radius: 50%;
-    cursor: pointer;
-    margin: 32px -21px;
 }
 .mess.frnmess h6{
     margin-left: 20px;
