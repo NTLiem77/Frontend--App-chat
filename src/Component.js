@@ -252,6 +252,10 @@
                         socket.send(JSON.stringify(getUser));// chuyen ve chuoi  - gui den socket
                     }
                 }
+                function file(event) {
+                    const file = event.target.files[0];
+                    setMess(file.name);
+                }
 
                 // file đang làm
                 function handleImageChange({target: {files}}){
@@ -376,6 +380,7 @@
                                       checkUser={checkUser}
                                       handGetUserList={handGetUserList}
                                       twoMessChat={twoMessChat}
+                                      file={file}
 
                                   />
                                 }

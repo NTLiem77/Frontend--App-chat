@@ -113,14 +113,13 @@ export default class Room extends React.Component{
                             <span>Online</span></p>
                         </div>
 
-                        <div className={"icon-nav"}>
+                        <ul className="icon-nav">
                             <li>
-                                <ion-icon name={"search-outline"} role={"img"} className={"md hydrated"} aria-label={"ellipsis vertical"}></ion-icon>
-                            </li>
-                        </div>
+                                <i className="fa-solid fa-video"></i>
 
-                        {/*logout*/}
-                        <li className={"logout pointer"} onClick={this.props.handLougout}>Đăng xuất</li>
+                            </li>
+                            <li className="lougout" onClick={this.props.handLougout}>Đăng xuất</li>
+                        </ul>
                     </div>
 
                     {/*Check User*/}
@@ -234,7 +233,11 @@ export default class Room extends React.Component{
                            <div id="pos" onClick={this.props.handPosClick}>
                                <i className="fa-regular fa-face-smile"></i>
                            </div>
-                                <i className="fa-solid fa-paperclip"></i>
+                                <div>
+                                    <input type={"file"} accept={'image/*'} className={'input-field'} hidden
+                                           onChange={this.props.handleImageChange}/>
+                                    <i className="fa-solid fa-paperclip"  onClick={() => document.querySelector(".input-field").click()}></i>
+                                </div>
                                 <input className="pointer" type="text" placeholder="Type a massage"/>
                                 <i className="fa-solid fa-paper-plane"></i>
                             </div>
