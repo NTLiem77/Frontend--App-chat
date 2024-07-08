@@ -9,7 +9,7 @@
     position: relative;
     width: 100%;
     max-width: 100%;
-    height: calc(100vh - 40px);
+    height: calc(106vh - 40px);
     background: #fff;
     box-shadow: 0 1px 1px 0 rgba(0,0,0,0.06), 0 2px 5px 0 rgba(0,0,0,0.06);
     display: flex;
@@ -56,9 +56,7 @@
     font-size: 16px;
     cursor: pointer;
 }
-.header-chat .icon-nav li i{
-    margin-top: 7px;
-}
+
 .user-avatar{
     position: relative;
     height: 40px;
@@ -66,6 +64,26 @@
     overflow: hidden;
     border-radius: 50%;
     cursor: pointer;
+}
+.icon-nav {
+    position: relative;
+}
+.icon-nav i{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+}
+
+.imgtext1 {
+    position: relative;
+    display: flex;
+    border: 1px solid #fff;
+    padding: 10px 0 13px 5px;
+    margin-left: 1px;
+    align-items: center;
+    margin-top: 8px;
+    margin-left: 16px;
 }
 .img-cover{
     position: absolute;
@@ -130,6 +148,11 @@
     height: calc(92% - 112px);/* Chiều cao header chat+ Search chat* 60+50*/
     overflow-y:auto;
 }
+.author_mess{
+    margin-top: 0;
+    margin-bottom: 0rem;
+    margin-left: 29px;
+}
 .list-chat>.box-chat{
     position: relative;
     width: 100%;
@@ -148,6 +171,10 @@
 .box-chat:hover{
     margin-top: 20px;
     margin-right: 10px;
+}
+.imgtext1:hover{
+    cursor: pointer;
+    background: #ccc;
 }
 .box-chat>.img-userchat{
     position: relative;
@@ -225,6 +252,25 @@
     padding: 50px;
     overflow-y: auto;
 }
+.chatbox .mess.frnmess p{
+    position: relative;
+    right: -2px;
+    text-align: right;
+    max-width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.9em;
+}
+.chatbox .mess.mynmess p{
+    position: relative;
+    right: -18px;
+    text-align: right;
+    max-width: 100%;
+    padding: 12px;
+    background: #dcf8c6;
+    border-radius: 10px;
+    font-size: 0.9em;
+}
 .mess{
     position: relative;
     display: flex;
@@ -233,13 +279,13 @@
 }
 .mess p{
     position: relative;
-    right: 0;
     text-align: right;
     max-width: 100%;
     padding: 12px;
-    background: #dcf8c6;
+    background: #fff;
     border-radius: 10px;
-    font-size: 0.9em
+    font-size: 0.9em;
+    margin-right: 20px;
 }
 .mess p::before{
     content: '';
@@ -248,7 +294,7 @@
     right: -12px;
     width: 20px;
     height: 20px;
-    background:  linear-gradient(135deg, #dcf8c6 0%, #dcf8c6 50%, transparent 50%, transparent)
+    background:  linear-gradient(135deg, #fff 0%, #fff 50%, transparent 50%, transparent)
 }
 .mess p span{
     font-size: 0.85em;
@@ -265,6 +311,9 @@
 .frnmess p{
     background: #fff;
     text-align: left;
+}
+.img_chat{
+    width: 300px
 }
 .frnmess p::before{
     content: '';
@@ -286,6 +335,7 @@
     border-bottom: 0;
     position: absolute;
     bottom: 0;
+    margin-top: 10px;
 }
 .chat-input-right .md.hydrated{
     font-size: 20px;
@@ -312,9 +362,12 @@
     border-radius: 30px;
     font-size: 1em;
 }
-.chat-input-left i {
+.chat-input-left FontAwesomeIcon {
     font-size: 25px;
     cursor: pointer;
+}
+.right-sidebar{
+    width: 100%;
 }
 .right-sidebar .search-chat{
     position: relative;
@@ -327,7 +380,7 @@
     padding: 0 15px;
     box-sizing: border-box;
     border-radius: 30px;
-    margin-top: 20px;
+    margin-top: 5px;
     margin-left: 30px;
 }
 .right-sidebar .search-chat i{
@@ -356,3 +409,68 @@
     cursor: pointer;
     margin-right: 10px;
 }
+.right-sidebar button{
+    border: none;
+}
+.mess.mymess{
+    position: relative;
+}
+
+
+
+.mess.mymess h6 h6 > img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: absolute;
+    right: -43px;
+    top: 7px;
+}
+
+.mess.frnmess{
+    position: relative;
+}
+.mess.frnmess .messFr{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: absolute;
+    top: 10px;
+    left: -20px;
+}
+.group1{
+    margin-left:  50%;
+}
+
+.m_l.call_end {
+    color: red;
+    font-size: 36px;
+}
+p.red-text {
+    color: red;
+}
+.call{
+    font-size: 36px;
+    color: green !important;
+}
+.flex-group{
+    justify-content: space-between;
+
+}
+.m_l{
+    margin-left: -221px;
+
+}
+.user-group1{
+    position: relative;
+    height: 200px;
+    width: 200px;
+    overflow: hidden;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 32px -21px;
+}
+.mess.frnmess h6{
+    margin-left: 20px;
+}
+.pointer {cursor: pointer;}
