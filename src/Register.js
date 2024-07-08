@@ -51,9 +51,9 @@ const Register = () =>{
         handleRegister();
     }
     return (
-        <div className="row mt-5">
+        <div className="row">
             <div className="offset-lg-3 col-lg-6">
-                <form className="container mt-5" onSubmit={handleSubmit}>
+                <form className="container" onSubmit={handleSubmit}>
                     <div className="card">
                         <div className="card-header">
                             <h2>Register</h2>
