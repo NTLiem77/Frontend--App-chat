@@ -21,6 +21,8 @@
                 const [roomName, setRoomName] = useState("");
                 const [messege, setMessege] = useState([]);
                 const [isMessenger, setisMess] = useState(false);
+                // tao mang chua phong
+                const [roomList, setRoomList] =useState([]);
                 // emoij
                 const [selectedEmoji, setSelectedEmoji] =useState(null);
                 // check khi clcik vao emoij
@@ -112,22 +114,25 @@
                   }
                 }
             //xử lý join room
-             const    handJoinRoom = (roomName) => {
-                 if (socket) {
-                     const joinroom = {
-                         action: "onchat",
-                         data: {
-                             event: "JOIN_ROOM",
-                             data: {
-                                 name: roomName
-                             }
-                         },
-                     }
-                     socket.send(socket.stringify(joinroom));
-                 }
-             }
+                const handJoinRoom = (roomName) => {
 
-            // get room mess chat
+                    if (socket) {
+                        const joinRoom = {
+                            action: "onchat",
+                            data: {
+                                event: "JOIN_ROOM",
+                                data: {
+                                    name: roomName
+                                }
+                            },
+                        }
+
+                        socket.send(JSON.stringify(joinRoom));
+                    }
+
+                }
+
+                // get room mess chat
                 const get_room_mess_chat = (roomName) => {
                     if(socket) {
                         const getroom = {
@@ -226,6 +231,7 @@
                                 event: "GET_USER_LIST"
                             }
                         }
+                        socket.send(JSON.stringify(getUser));// chuyen ve chuoi  - gui den socket
                     }
                 }
 
@@ -253,6 +259,7 @@
                           const newSocket = new WebSocket("ws://140.238.54.136:8080/chat/chat");
                           setSocket(newSocket);
                           setErrorMsg("")
+                          handGetUserList();
                           navigate("/login");
                         }
 
@@ -266,12 +273,17 @@
                             // relogin
                             if(responseData.event ==="RE_LOGIN"  && responseData.status === "success"){
                                 setIsLoginSuccess(true);
+                                handGetUserList();
+                                const room = localStorage.getItem("nameRoom");
+                                handJoinRoom(room);
                             }
                             // relogin het thoi gian
                             if(responseData.event === "RE_LOGIN" && responseData.status ===
                                 "error" && responseData.mes === "Re-Login error, Code error or you are overtime to relogin!"){
                                 setIsLoginSuccess(false);
                                 setErrorMsg("");
+
+
                             }
                             // gửi tin nhắn thành công
                             if (responseData.event === "SEND_CHAT" && responseData.status === "success"){
@@ -285,7 +297,14 @@
                                 const room = localStorage.getItem("nameRoom");
                                 handJoinRoom(room);
                             }
+// joinroom
+                            if (responseData.event === "JOIN_ROOM" && responseData.status === "success") {
+                                localStorage.setItem("nameRoom", responseData.data.name);
+                                setMessege(responseData.data.chatData);
+                                localStorage.setItem("ownner", responseData.data.own);
+                                const ownner = localStorage.getItem("ownner");
 
+                            }
                              // check user
                             if (responseData.event === "CHECK_USER" && responseData.status === "success"){
                                 console.log(responseData.data.status);
@@ -294,6 +313,7 @@
                             // lay ra danh sach nguoi dung, phong
                             if (responseData.event === "GET_USER_LIST" && responseData.status === "success"){
                                 console.log(responseData.data);
+                                setRoomList(responseData.data);
                             }
                         }
                     }
@@ -308,7 +328,8 @@
                                   handPosClick={handlePosClick}
                                           isEmojiPickerVisible={isEmojiPickerVisible}
                                           handleEmojiClick={handleEmojiClick}
-
+                        roomList ={roomList}
+                                          handJoinRoom={handJoinRoom}
                                   />
                                 }
                                 {isLoginSuccess == false &&

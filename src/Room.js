@@ -8,6 +8,8 @@ export default class Room extends React.Component{
 
         const mesnam =  sessionStorage.getItem("mesnam");
         const username =  sessionStorage.getItem("name1");
+        // lay ten phong
+        const nameRoom = localStorage.getItem("nameRoom");
         return <div>
 
             <div className="container1">
@@ -44,16 +46,37 @@ export default class Room extends React.Component{
                     </div>
 
                     {/*Chat list*/}
-                    <div className="box-chat active">
-                        <div className="img-userchat">
-                            <img src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg"
-                                 className="img-cover"/>
-                        </div>
-                        <div className="details">
-                            <div className="headerlist">
-                                <p>Huỳnh Anh Tài</p>
+                    <div className="list-chat">
+
+
+                        <div>
+                            <div>
+
+                                {this.props.roomList.map((room, index) => (
+                                    <div className="group"  >
+
+                                        {room.name !== "20130423" && room.name !=="sassd" && room.name !== "" && room.name !== "2324322" && room.name !== "Thu?n ??ng c?p" && room.name !== "Nhom 11 _Da Cap" && room.name !== "12314141"
+                                        && room.name !== "hello" && room.name !== "3252523232" && room.name !== "3252523" && room.name !== "231121312" && room.name !== "22222222" && room.name !== "124135462" && room.name !== "111111111" && room.name !== "2222222222" ? (
+                                            <h6 key={index}>
+                                                <div className="imgtext1" onClick={() => this.props.handJoinRoom(room.name)}>
+                                                    <div className="user-avatar"><img
+                                                        src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg"
+                                                        className="img-cover"/></div>
+                                                    <p className="author_mess">{room.name}</p>
+                                                </div>
+                                            </h6>
+
+                                        ) : (null)
+
+                                        }
+                                    </div>
+                                ))}
+
+
                             </div>
                         </div>
+
+
                     </div>
                     <div className="chat-input-left">
                         <input type="text" placeholder="Type a massage"/>
@@ -71,7 +94,7 @@ export default class Room extends React.Component{
                                      className="img-cover"/>
                             </div>
                             <i className="fa-solid fa-user-plus"></i>
-                            <p>Huỳnh Anh Tài<br/><span>online</span></p>
+                            <p>{nameRoom}<br/><span>online</span></p>
                         </div>
                         <ul className="icon-nav">
                             <li>

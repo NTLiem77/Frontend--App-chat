@@ -67,6 +67,16 @@
     border-radius: 50%;
     cursor: pointer;
 }
+.imgtext1 {
+    position: relative;
+    display: flex;
+    border: 1px solid #fff;
+    padding: 10px 0 13px 5px;
+    margin-left: 1px;
+    align-items: center;
+    margin-top: 8px;
+    margin-left: 16px;
+}
 .img-cover{
     position: absolute;
     top: 0;
@@ -130,6 +140,11 @@
     height: calc(92% - 112px);/* Chiều cao header chat+ Search chat* 60+50*/
     overflow-y:auto;
 }
+.author_mess{
+    margin-top: 0;
+    margin-bottom: 0rem;
+    margin-left: 29px;
+}
 .list-chat>.box-chat{
     position: relative;
     width: 100%;
@@ -148,6 +163,10 @@
 .box-chat:hover{
     margin-top: 20px;
     margin-right: 10px;
+}
+.imgtext1:hover{
+    cursor: pointer;
+    background: #ccc;
 }
 .box-chat>.img-userchat{
     position: relative;
