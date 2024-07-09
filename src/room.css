@@ -287,10 +287,6 @@
     position: absolute;
     bottom: 0;
 }
-.chat-input-right .md.hydrated{
-    font-size: 20px;
-    cursor: pointer;
-}
 .chat-input-left{
     width: 100%;
     height: 60px;
