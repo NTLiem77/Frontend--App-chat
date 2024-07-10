@@ -1,18 +1,28 @@
             import {useNavigate} from "react-router-dom";
-            import React, {useState, useEffect} from "react";
+            import React, {useState, useCallback, useEffect} from "react";
             import {w3cwebsocket} from "websocket";
 
             import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
             import './room.css'
-
-
+            import { storage } from "./firebase";
+            import {
+                ref,
+                uploadBytes,
+                getDownloadURL,
+                listAll,
+                list,
+            } from "firebase/storage";
+            import { v4 } from "uuid";
             import LoginForm from "./LoginForm";
             import Room from "./Room";
             import {navigate} from "ionicons/icons";
-            const Component = () =>{
+            import VideoCall from "./VideoCall";
+            import RoomVideoCall from "./VideoCall";
+            import videoCall from "./VideoCall";
+            const Component = () => {
                 const [socket, setSocket] = useState(null);
                 const [user, setUser] = useState("");
-                const [pass, setPass] =useState("");
+                const [pass, setPass] = useState("");
                 const [isLoginSuccess, setIsLoginSuccess] = useState(false);
                 const [token, setToken] = useState("");
                 const [errorMsg, setErrorMsg] = useState("");
@@ -20,27 +30,61 @@
                 const [messenger, setMess] = useState("");
                 const [roomName, setRoomName] = useState("");
                 const [messege, setMessege] = useState([]);
-                const [isMessenger, setisMess] = useState(false);
+                const [isMessenger, setisMessenger] = useState(false);
+                const [isJoin, setisJoin] = useState(true);
+                const [isClickvideo, setisClickvideo] = useState(false);
                 // tao mang chua phong
-                const [roomList, setRoomList] =useState([]);
+                const [roomList, setRoomList] = useState([]);
                 // emoij
-                const [selectedEmoji, setSelectedEmoji] =useState(null);
+                const [selectedEmoji, setSelectedEmoji] = useState(null);
                 // check khi clcik vao emoij
-                const  [isEmojiPickerVisible, setEmojiPickerVisible] =useState(false);
+                const [isEmojiPickerVisible, setEmojiPickerVisible] = useState(false);
                 const navigate = useNavigate();
+                //uploadFile
+                const [imageUpload, setImageUpload] = useState(null);
+                const [imageUrls, setImageUrls] = useState();
+
+                const imagesListRef = ref(storage, "images/");
+                const uploadFile = () => {
+                    if (imageUpload == null){
+                        return;
+                    }
+                    const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+                    uploadBytes(imageRef, imageUpload).then((snapshot) => {
+                        getDownloadURL(imageRef).then((url) => {
+                            setImageUrls(url)
+                        })
+                        // getDownloadURL(snapshot.ref).then((url) => {
+                        //     setImageUrls((prev) => [...prev, url]);
+                        //     // setImageUrls(url)
+                        // });
+                    });
+                }
+                useEffect(() => {
+                    listAll(imagesListRef).then((response) => {
+                        response.items.forEach((item) => {
+                            getDownloadURL(item).then((url) => {
+                                // setImageUrls((prev) => [...prev, url]);
+                                setImageUrls(url);
+                            });
+                        });
+                    });
+                }, []);
+
+
+
 
                 // khi component được taạo thiết lập kết nối websocket
-                const mesnam=  sessionStorage.getItem("mesnam");
-                useEffect(() =>{
+                const username = sessionStorage.getItem("username");
+                useEffect(() => {
                     const newSocket = new WebSocket("ws://140.238.54.136:8080/chat/chat");
 
-                    newSocket.addEventListener("open",(event) =>{
+                    newSocket.addEventListener("open", (event) => {
                         console.log("Kết nối websocket đã được thiết lập", event);
                         setSocket(newSocket);
                     })
-                   const susscess =sessionStorage.getItem("success");
-                    if(susscess=== "success"){
-                        sessionStorage.setItem("name1", mesnam);
+                    const susscess = sessionStorage.getItem("success");
+                    if (susscess === "success") {
                         const nlu = sessionStorage.getItem("codeNlu");
                         newSocket.onopen = function () {
                             const relogin = {
@@ -48,7 +92,7 @@
                                 data: {
                                     event: "RE_LOGIN",
                                     data: {
-                                        user: mesnam,
+                                        user: username,
                                         code: nlu
                                     }
                                 }
@@ -87,31 +131,35 @@
                         },
                     };
                     socket.send(JSON.stringify(requestData));
+                    sessionStorage.setItem("username", requestData.data.data.user);
+
                 }
                 // su kien dang xuat
-            const handLougout = () => {
-              const eventLougout ={
-                  action: "onchat",
-                  data: {
-                      event: "LOGOUT"
-                  }
-              }
-              socket.send(JSON.stringify(eventLougout));
-            }
-            // tao phong
+                const handLougout = () => {
+                    const eventLougout = {
+                        action: "onchat",
+                        data: {
+                            event: "LOGOUT"
+                        }
+                    }
+                    socket.send(JSON.stringify(eventLougout));
+                }
+                // tao phong
                 const handCreateRoom = () => {
-                  if(socket){
-                      const data ={
-                          action: "onchat",
-                          data: {
-                              event: "CREATE_ROOM",
-                              data: {
-                                  name: roomName,
-                              },
-                          }
-                      }
-                      socket.send(socket.stringify(data));
-                  }
+                    if (socket) {
+                        const data = {
+                            action: "onchat",
+                            data: {
+                                event: "CREATE_ROOM",
+                                data: {
+                                    name: roomName,
+                                },
+                            },
+                        };
+                        socket.send(JSON.stringify(data));
+                    }
+                    // sau khi tạo thì load lại danh sach phong, người dùng
+                    handGetUserList()
                 }
             //xử lý join room
                 const handJoinRoom = (roomName) => {
@@ -134,7 +182,7 @@
 
                 // get room mess chat
                 const get_room_mess_chat = (roomName) => {
-                    if(socket) {
+                    if (socket) {
                         const getroom = {
                             action: "onchat",
                             data: {
@@ -151,28 +199,55 @@
 
                 // send chat room
                 const messchat = (roomName) => {
-                    return new Promise(resolve => {
-                        if(socket){
+                    return new Promise((resolve) => {
+                        if (socket) {
                             const mess1 = {
-                                action: "SEND_CHAT",
-                                data:{
-                                    type: "room",
-                                    to: roomName,
-                                    mes: encodeURIComponent(messenger)
+                                action: "onchat",
+                                data: {
+                                    event: "SEND_CHAT",
+                                    data: {
+                                        type: "room",
+                                        to: roomName,
+                                        mes: encodeURIComponent(messenger)
+                                    }
                                 }
-
                             }
+
+                            socket.send(JSON.stringify(mess1));
+                            resolve();
                         }
-                    })
+                    });
+                }
+                // mess
+                const videocall = (roomName, messenger) => {
+                    return new Promise((resolve) => {
+                        if (socket) {
+                            const mess1 = {
+                                action: "onchat",
+                                data: {
+                                    event: "SEND_CHAT",
+                                    data: {
+                                        type: "room",
+                                        to: roomName,
+                                        mes: encodeURIComponent(messenger)
+                                    }
+                                }
+                            }
+
+                            socket.send(JSON.stringify(mess1));
+                            resolve();
+                        }
+                    });
                 }
 
-                const twoMessChat = (roomName) =>{
+                const twoMessChat = (roomName) => {
                     messchat(roomName).then(get_room_mess_chat(roomName));
+                    uploadFile()
                 }
 
                 // get people chat mess
-                const GET_PEOPLE_CHAT_MES = () => {
-                    if(socket){
+                const GET_PEOPLE_CHAT_MES = (roomName) => {
+                    if (socket) {
                         const mess = {
                             action: "onchat",
                             data: {
@@ -184,32 +259,41 @@
                             }
                         }
                         socket.send(JSON.stringify(mess));
+
+                        sessionStorage.setItem("dataTo", mess.data.data.name);
                     }
                 }
-
                 // send chat people
-                const messPeople = (user) =>{
-                    if (socket){
-                        const people = {
-                            action: "onchat",
-                            data: {
-                                event: "SEND_CHAT",
-                                data: {
-                                    type: "people",
-                                    to: user,
-                                    mes: encodeURIComponent(messenger)
+                const messPeople = (user) => {
+                    return new Promise((resolve) => {
+                            if (socket) {
+                                const people = {
+                                    action: "onchat",
+                                    data: {
+                                        event: "SEND_CHAT",
+                                        data: {
+                                            type: "people",
+                                            to: user,
+                                            mes: encodeURIComponent(messenger)
+                                        }
+                                    }
                                 }
+                                socket.send(JSON.stringify(people));
+                                resolve();
                             }
-                        }
-                        setMessege(prevMessages => [...prevMessages,  , messenger]);
-                        socket.send(JSON.stringify(people));
                     }
+                    )
+
+                }
+                const twoMessChatPeople = (roomName) => {
+                    messPeople(roomName).then(GET_PEOPLE_CHAT_MES(roomName));
+                    uploadFile()
                 }
 
-            // check user
-                const checkUser = () =>{
-                    if (socket){
-                        const check ={
+                // check user
+                const checkUser = () => {
+                    if (socket) {
+                        const check = {
                             action: "onchat",
                             data: {
                                 event: "CHECK_USER",
@@ -218,13 +302,19 @@
                                 }
                             }
                         }
-                        socket.send(JSON.stringify(check));
+                        socket.send(JSON.stringify(check));const
+                            success = sessionStorage.getItem("success" );
+                            const checkuser = sessionStorage.getItem("checkuser" );
+                            if(success ==="success" && checkuser === "CHECK_USER"){
+                                sessionStorage.setItem("user" ,check.data.data.user)
+                            }
                     }
+
                 }
 
                 // lay ra danh sach nguoi dung, phong
-                const handGetUserList = () =>{
-                    if (socket){
+                const handGetUserList = () => {
+                    if (socket) {
                         const getUser = {
                             action: "onchat",
                             data: {
@@ -310,41 +400,73 @@
                                 console.log(responseData.data.status);
                             }
 
-                            // lay ra danh sach nguoi dung, phong
-                            if (responseData.event === "GET_USER_LIST" && responseData.status === "success"){
-                                console.log(responseData.data);
-                                setRoomList(responseData.data);
+                                // lay ra danh sach nguoi dung, phong
+                                if (responseData.event === "GET_USER_LIST" && responseData.status === "success") {
+                                    setisMessenger(false);
+                                    setRoomList(responseData.data);
+                                }
                             }
                         }
-                    }
-                },[socket,setIsLoginSuccess])
+                    }, [socket, setIsLoginSuccess])
 
-                return(
-                    <div>
+                    return (
+                        <div>
                             <div>
-                                {isLoginSuccess == true&&
-                                  <Room   user={user}
-                                          handLougout={handLougout}
-                                  handPosClick={handlePosClick}
-                                          isEmojiPickerVisible={isEmojiPickerVisible}
-                                          handleEmojiClick={handleEmojiClick}
-                        roomList ={roomList}
-                                          handJoinRoom={handJoinRoom}
-                                  />
+                                {isLoginSuccess == true &&
+                                    <Room
+                                        user={user}
+                                        customer={customer}
+                                        setCutomer={setCutomer}
+                                        handLougout={handLougout}
+                                        handPosClick={handlePosClick}
+                                        isEmojiPickerVisible={isEmojiPickerVisible}
+                                        handleEmojiClick={handleEmojiClick}
+                                        roomList={roomList}
+                                        setRoomList={setRoomList}
+                                        handCreateRoom={handCreateRoom}
+                                        handJoinRoom={handJoinRoom}
+                                        roomName={roomName}
+                                        setRoomName={setRoomName}
+                                        isMessenger = {isMessenger}
+                                        messenger={messenger}
+                                        setMess={setMess}
+                                        messege={messege}
+                                        checkUser={checkUser}
+                                        handGetUserList={handGetUserList}
+                                        twoMessChat={twoMessChat}
+                                        file={file}
+                                        twoMessChatPeople={twoMessChatPeople}
+                                        Tranlate={Tranlate}
+                                        handleVideoCall={handleVideoCall}
+                                        messPeople={messPeople}
+                                        videoCall={videoCall}
+                                        isClickvideo={isClickvideo}
+                                        getchatpeople ={GET_PEOPLE_CHAT_MES }
+                                        // searchUser={searchUser(roomName)}
+                                        setImageUpload = {setImageUpload}
+                                        imageUpload = {imageUpload}
+                                        imageUrls = {imageUrls}
+                                        uploadFile = {uploadFile}
+                                        isJoin = {isJoin}
+                                        setisJoin = {setisJoin}
+                                    />
                                 }
                                 {isLoginSuccess == false &&
-                                        <LoginForm
-                                            user = {user}
-                                            setUser = {setUser}
-                                            pass = {pass}
-                                            setPass = {setPass}
-                                            handleLogin = {handleLogin}
-                                            errorMsg={errorMsg}
-                                        />
+                                    <LoginForm
+                                        user={user}
+                                        setUser={setUser}
+                                        pass={pass}
+                                        setPass={setPass}
+                                        handleLogin={handleLogin}
+                                        errorMsg={errorMsg}
+                                    />
+                                }
+                                {
+                                    isLoginSuccess !== false && isLoginSuccess !== true &&
+                                    <RoomVideoCall videocall={videocall}/>
                                 }
                             </div>
-                    </div>
-                )
+                        </div>
+                    )
             }
-
             export default Component
