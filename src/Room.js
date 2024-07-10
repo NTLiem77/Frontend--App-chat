@@ -51,14 +51,6 @@ export default class Room extends React.Component{
                         </div>
                         <ul className="icon-nav">
                             <li>
-                                <ion-icon name="scan-circle-outline" role="img" className="md hydrated" aria-label="scan circle outline">
-                                </ion-icon>
-                            </li>
-                            <li>
-                                <ion-icon name="videocam-outline" role="img" className="md hydrated" aria-label="chatbox">
-                                </ion-icon>
-                            </li>
-                            <li>
                                 <div id="componet">
                                     <ion-icon name="ellipsis-vertical" role="img" className="md hydrated" aria-label="ellipsis vertical">
                                     </ion-icon>
@@ -128,207 +120,412 @@ export default class Room extends React.Component{
                 <div className="right-sidebar">
                     {/*Header chat*/}
                     <div className="header-chat">
-                        {this.props.isMessenger === false &&
+                        {this.props.isJoin === true &&
                             <div className={"imgtext"}>
-                                <div className={"user-avatar"}>
-                                    <img src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg" className={"img-cover"}/>
-                                </div>
+                                {/*<div className={"user-avatar"}>*/}
+                                {/*    <img src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg" className={"img-cover"}/>*/}
+                                {/*</div>*/}
 
-                                <p className={"author_mess"}>{nameRoom}<br/>
-                                    <span>Online</span></p>
+                                    {/*<span>Online</span>*/}
                             </div>
-                        } {this.props.isMessenger === true &&
+                        } {this.props.isMessenger === false && this.props.isJoin === false &&
                         <div className={"imgtext"}>
                             <div className={"user-avatar"}>
-                                <img
-                                    src="https://w7.pngwing.com/pngs/831/88/png-transparent-user-profile-computer-icons-user-interface-mystique-miscellaneous-user-interface-design-smile-thumbnail.png"
-                                    className="img-cover"/>
+                                <img src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg" className={"img-cover"}/>
                             </div>
-                            <p className={"author_mess"}>{data}<br/>
+                            <p className={"author_mess"}>{nameRoom}<br/>
                                 <span>Online</span></p>
                         </div>
                     }
-                        <ul className="icon-nav">
-                            <li>
-                                <i className="fa-solid fa-video"></i>
-                            </li>
-                            <li className="lougout" onClick={this.props.handLougout}>Đăng xuất</li>
-                        </ul>
+
+                        {this.props.isMessenger === true && this.props.isJoin === false &&
+                            <div className={"imgtext"}>
+                                <div className={"user-avatar"}>
+                                    <img
+                                        src="https://w7.pngwing.com/pngs/831/88/png-transparent-user-profile-computer-icons-user-interface-mystique-miscellaneous-user-interface-design-smile-thumbnail.png"
+                                        className="img-cover"/>
+                                </div>
+                                <p className={"author_mess"}>{data}<br/>
+                                    <span>Online</span></p>
+                            </div>
+                        }
+                        {this.props.isJoin === false && this.props.isMessenger === true &&
+                            <ul className="icon-nav">
+                                <li onClick={() => this.props.videoCall(nameRoom, url)}>
+                                    <i className="fa-solid fa-video"></i>
+                                </li>
+                                <li className="lougout" onClick={this.props.handLougout}>Đăng xuất</li>
+                            </ul>}
+                        {this.props.isJoin === false && this.props.isMessenger === false &&
+                            <ul className="icon-nav">
+                                <li onClick={() => this.props.videoCall(nameRoom, url)}>
+                                    <i className="fa-solid fa-video"></i>
+                                </li>
+                                <li className="lougout" onClick={this.props.handLougout}>Đăng xuất</li>
+                            </ul>}
+
                     </div>
                     {/*Check User*/}
-                    <div className="search-chat pointer">
-                        <div><input type="text" placeholder="Check user" fdprocessedid="hss68p"
-                                    value={this.props.customer}
-                                    onChange={(e) => this.props.setCutomer(e.target.value)}></input>
-                            <div onClick={this.props.checkUser}>
-                                <ion-icon name="chevron-forward" role="img" className="md hydrated"
-                                          aria-label="search outline"></ion-icon>
+                    {this.props.isJoin === false && this.props.isMessenger === true &&
+                        <div className="search-chat pointer">
+                            <div><input type="text" placeholder="Check user" fdprocessedid="hss68p"
+                                        value={this.props.customer}
+                                        onChange={(e) => this.props.setCutomer(e.target.value)}></input>
+                                <div onClick={this.props.checkUser}>
+                                    <ion-icon name="chevron-forward" role="img" className="md hydrated"
+                                              aria-label="search outline"></ion-icon>
+                                </div>
                             </div>
+                            {/*<i className="fa-solid fa-chevron-right"></i>*/}
+                            {/*<div><input className="pointer" type="text" placeholder="Check User" fdprocessedid="hss68p"/>*/}
+                            {/*</div>*/}
                         </div>
-                        {/*<i className="fa-solid fa-chevron-right"></i>*/}
-                        {/*<div><input className="pointer" type="text" placeholder="Check User" fdprocessedid="hss68p"/>*/}
-                        {/*</div>*/}
-                    </div>
+                    }
+                    {this.props.isJoin === false && this.props.isMessenger === false &&
+                        <div className="search-chat pointer">
+                            <div><input type="text" placeholder="Check user" fdprocessedid="hss68p"
+                                        value={this.props.customer}
+                                        onChange={(e) => this.props.setCutomer(e.target.value)}></input>
+                                <div onClick={this.props.checkUser}>
+                                    <ion-icon name="chevron-forward" role="img" className="md hydrated"
+                                              aria-label="search outline"></ion-icon>
+                                </div>
+                            </div>
+                            {/*<i className="fa-solid fa-chevron-right"></i>*/}
+                            {/*<div><input className="pointer" type="text" placeholder="Check User" fdprocessedid="hss68p"/>*/}
+                            {/*</div>*/}
+                        </div>
+                    }
 
                     {/*Chat box*/}
                     <div className="chatbox">
-                        <div>
-                            {sortMess.map((message, index) => (
-                                    <div>
+                        {this.props.isJoin === true &&
+                            <div>
+                                <h2>Chào mừng bạn đến App Chat của nhóm 11!</h2>
+                                <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQz6C4Pptuv_HeluHFtNhTP81KE1ZyojghTqg&usqp=CAU"}></img>
+                            </div>
+                        }
+                        {/*tin nhắn người*/}
+                        {this.props.isMessenger === true && this.props.isJoin === false &&
+                            <div>
+                                {sortMess.map((message, index) => (
                                         <div>
-                                            {message.name === "20130433" && !message.mes.startsWith("https") &&
-                                                <div className="mess frnmess">
-                                                    <h6>
-                                                        <h6 key={index}>
-                                                            <img  src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className="messFr"></img>
-                                                            <h6>{message.name}</h6>
-                                                            <p>{decodeURIComponent(message.mes)}
-                                                                <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
+                                            <div>
+                                                {message.name === "20130433" && !message.mes.startsWith("https") &&
+                                                    <div className="mess frnmess">
+                                                        <h6>
+                                                            <h6 key={index}>
+                                                                <img  src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className="messFr"></img>
+                                                                <h6>{message.name}</h6>
+                                                                <p>{decodeURIComponent(message.mes)}
+                                                                    <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
+                                                            </h6>
                                                         </h6>
-                                                    </h6>
-                                                </div>
-                                            }
-                                        </div>
-                                        <div>
-                                            {message.name === "20130433" && message.mes.startsWith("https") &&
-                                                <div className="mess mymess">
-                                                    <h6>
-                                                        <h6 key={index}>
-                                                            <h6>{message.name}</h6>
-                                                            <img src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className={'messFr'}></img>
-                                                            <p >  <img className="img_chat" src={decodeURIComponent(message.mes)} alt=""/>
-                                                                <br/>
-                                                                <p>
-                                                                    <span>{convertServerTimeToClientTime(message.createAt)}</span></p></p>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div>
+                                                {message.name === "20130433" && message.mes.startsWith("https") &&
+                                                    <div className="mess mymess">
+                                                        <h6>
+                                                            <h6 key={index}>
+                                                                <h6>{message.name}</h6>
+                                                                <img src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className={'messFr'}></img>
+                                                                <p >  <img className="img_chat" src={decodeURIComponent(message.mes)} alt=""/>
+                                                                    <br/>
+                                                                    <p>
+                                                                        <span>{convertServerTimeToClientTime(message.createAt)}</span></p></p>
+                                                            </h6>
                                                         </h6>
-                                                    </h6>
-                                                </div>
-                                            }
-                                        </div>
-                                        <div>
-                                            {message.name === "20130423" && message.mes.startsWith("https") &&
-                                                <div className="mess mymess ">
-                                                    <h6>
-                                                        <h6 key={index}>
-                                                            <img src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className={'messFr'}></img>
-                                                            <h6>{message.name}</h6>
-                                                            <p><img className="img_chat" src={decodeURIComponent(message.mes)} alt=""/>
-                                                                <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div>
+                                                {message.name === "20130423" && message.mes.startsWith("https") &&
+                                                    <div className="mess mymess ">
+                                                        <h6>
+                                                            <h6 key={index}>
+                                                                <img src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className={'messFr'}></img>
+                                                                <h6>{message.name}</h6>
+                                                                <p><img className="img_chat" src={decodeURIComponent(message.mes)} alt=""/>
+                                                                    <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
+                                                            </h6>
                                                         </h6>
-                                                    </h6>
-                                                </div>
-                                            }
-                                        </div>
-                                        {/*201304388*/}
-                                        <div>
-                                            {message.name === "20130388" && message.mes.startsWith("https") &&
-                                                <div className="mess frnmess">
-                                                    <h6>
-                                                        <h6 key={index}>
-                                                            <img src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className={'messFr'}></img>
-                                                            <h6>{message.name}</h6>
-                                                            <p >  <img className="img_chat"  src={decodeURIComponent(message.mes)} alt=""/>
-                                                                <br/>
-                                                                <p>
-                                                                    <span>{convertServerTimeToClientTime(message.createAt)}</span></p></p>
+                                                    </div>
+                                                }
+                                            </div>
+                                            {/*201304388*/}
+                                            <div>
+                                                {message.name === "20130388" && message.mes.startsWith("https") &&
+                                                    <div className="mess frnmess">
+                                                        <h6>
+                                                            <h6 key={index}>
+                                                                <img src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className={'messFr'}></img>
+                                                                <h6>{message.name}</h6>
+                                                                <p >  <img className="img_chat"  src={decodeURIComponent(message.mes)} alt=""/>
+                                                                    <br/>
+                                                                    <p>
+                                                                        <span>{convertServerTimeToClientTime(message.createAt)}</span></p></p>
+                                                            </h6>
                                                         </h6>
-                                                    </h6>
-                                                </div>
-                                            }
-                                        </div>
-                                        <div>
-                                            {message.name === "20130423" &&  !message.mes.startsWith("https") &&  !message.mes.startsWith("http") &&
-                                                <div className="mess frnmess">
-                                                    <h6>
-                                                        <h6 key={index}>
-                                                            <img src={"https://i.pinimg.com/564x/b1/78/32/b17832ed39fd47db601a525e963050a2.jpg"} className={'messFr'}></img>
-                                                            <h6>{message.name}</h6>
-                                                            <p>{decodeURIComponent(message.mes)}
-                                                                <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div>
+                                                {message.name === "20130423" &&  !message.mes.startsWith("https") &&  !message.mes.startsWith("http") &&
+                                                    <div className="mess frnmess">
+                                                        <h6>
+                                                            <h6 key={index}>
+                                                                <img src={"https://i.pinimg.com/564x/b1/78/32/b17832ed39fd47db601a525e963050a2.jpg"} className={'messFr'}></img>
+                                                                <h6>{message.name}</h6>
+                                                                <p>{decodeURIComponent(message.mes)}
+                                                                    <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
+                                                            </h6>
                                                         </h6>
-                                                    </h6>
 
-                                                </div>
-                                            }
-                                        </div>
-                                        {/* 22*/}
-                                        <div>
-                                            {message.name === "20130388" && !message.mes.startsWith("https") &&
-                                                <div className="mess mymess">
-                                                    <h6>
-                                                        <h6 key={index}>
-                                                            <img src={"https://timanhdep.com/wp-content/uploads/2022/06/hinh-nen-cute-anh-nen-cute-dang-yeu-nhat-the-gioi-01.jpg"}></img>
-                                                            <h6>{message.name}</h6>
-                                                            <p>{decodeURIComponent(message.mes)}
-                                                                <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
+                                                    </div>
+                                                }
+                                            </div>
+                                            {/* 22*/}
+                                            <div>
+                                                {message.name === "20130388" && !message.mes.startsWith("https") &&
+                                                    <div className="mess mymess">
+                                                        <h6>
+                                                            <h6 key={index}>
+                                                                <img src={"https://timanhdep.com/wp-content/uploads/2022/06/hinh-nen-cute-anh-nen-cute-dang-yeu-nhat-the-gioi-01.jpg"}></img>
+                                                                <h6>{message.name}</h6>
+                                                                <p>{decodeURIComponent(message.mes)}
+                                                                    <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
+                                                            </h6>
                                                         </h6>
-                                                    </h6>
-                                                </div>
-                                            }
-                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
 
-                                        {/*<div>*/}
-                                        {/*    {message.name === "20130423" && !message.mes.endsWith("VideoCall") || message.name === "20130423"  && message.mes.startsWith("https") || message.name === "20130433" && !message.mes.startsWith("https") &&*/}
-                                        {/*        <div className="mess frnmess">*/}
-                                        {/*            <h6>*/}
-                                        {/*                <h6 key={index}>*/}
+                                            {/*<div>*/}
+                                            {/*    {message.name === "20130423" && !message.mes.endsWith("VideoCall") || message.name === "20130423"  && message.mes.startsWith("https") || message.name === "20130433" && !message.mes.startsWith("https") &&*/}
+                                            {/*        <div className="mess frnmess">*/}
+                                            {/*            <h6>*/}
+                                            {/*                <h6 key={index}>*/}
 
-                                        {/*                    <h6>{message.name}</h6>*/}
-                                        {/*                    <p><a href={decodeURIComponent(message.mes)} target="_blank"*/}
-                                        {/*                          onClick={(event) => {*/}
-                                        {/*                              event.preventDefault();*/}
-                                        {/*                              window.open(decodeURIComponent(message.mes))*/}
-                                        {/*                          }}>{decodeURIComponent(message.mes)}</a>*/}
-                                        {/*                        <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>*/}
-                                        {/*                </h6>*/}
-                                        {/*            </h6>*/}
+                                            {/*                    <h6>{message.name}</h6>*/}
+                                            {/*                    <p><a href={decodeURIComponent(message.mes)} target="_blank"*/}
+                                            {/*                          onClick={(event) => {*/}
+                                            {/*                              event.preventDefault();*/}
+                                            {/*                              window.open(decodeURIComponent(message.mes))*/}
+                                            {/*                          }}>{decodeURIComponent(message.mes)}</a>*/}
+                                            {/*                        <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>*/}
+                                            {/*                </h6>*/}
+                                            {/*            </h6>*/}
 
-                                        {/*        </div>*/}
-                                        {/*    }*/}
-                                        {/*</div>*/}
-                                        {/*    */}
+                                            {/*        </div>*/}
+                                            {/*    }*/}
+                                            {/*</div>*/}
+                                            {/*    */}
 
-                                        <div>
-                                            {  message.mes.endsWith("VideoCall") &&
-                                                <div className="mess frnmess">
-                                                    <h6>
-                                                        <h6 key={index}>
-                                                            <img src={"https://i.pinimg.com/564x/b1/78/32/b17832ed39fd47db601a525e963050a2.jpg"} className={'messFr'}></img>
-                                                            <h6>{message.name}</h6>
-                                                            <p className="red-text">video gọi thoại :<a href='http://localhost:3000/room/VideoCall' >{decodeURIComponent(message.mes)}</a>
-                                                                <br/><span>{message.createAt}</span></p>
+                                            <div>
+                                                {  message.mes.endsWith("VideoCall") &&
+                                                    <div className="mess frnmess">
+                                                        <h6>
+                                                            <h6 key={index}>
+                                                                <img src={"https://i.pinimg.com/564x/b1/78/32/b17832ed39fd47db601a525e963050a2.jpg"} className={'messFr'}></img>
+                                                                <h6>{message.name}</h6>
+                                                                <p className="red-text">video gọi thoại :<a href='http://localhost:3000/room/VideoCall' >{decodeURIComponent(message.mes)}</a>
+                                                                    <br/><span>{message.createAt}</span></p>
+                                                            </h6>
                                                         </h6>
-                                                    </h6>
-                                                </div>
-                                            }
+                                                    </div>
+                                                }
+                                            </div>
+
+                                            {/*<div>*/}
+                                            {/*    {message.name === "20130388" && message.mes.startsWith("https") &&*/}
+                                            {/*        <div className="mess mymess">*/}
+                                            {/*            <h6>*/}
+                                            {/*                <h6 key={index}>*/}
+                                            {/*                    <h6>{message.name}</h6>*/}
+                                            {/*                    <p><a href={decodeURIComponent(message.mes)} target="_blank"*/}
+                                            {/*                          onClick={(event) => {*/}
+                                            {/*                              event.preventDefault();*/}
+                                            {/*                              window.open(decodeURIComponent(message.mes))*/}
+                                            {/*                          }}>{decodeURIComponent(message.mes)}</a>*/}
+                                            {/*                        <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>*/}
+                                            {/*                </h6>*/}
+                                            {/*            </h6>*/}
+                                            {/*        </div>*/}
+                                            {/*    }*/}
+                                            {/*</div>*/}
+                                            {/*goi thoai*/}
+
                                         </div>
 
-                                        {/*<div>*/}
-                                        {/*    {message.name === "20130388" && message.mes.startsWith("https") &&*/}
-                                        {/*        <div className="mess mymess">*/}
-                                        {/*            <h6>*/}
-                                        {/*                <h6 key={index}>*/}
-                                        {/*                    <h6>{message.name}</h6>*/}
-                                        {/*                    <p><a href={decodeURIComponent(message.mes)} target="_blank"*/}
-                                        {/*                          onClick={(event) => {*/}
-                                        {/*                              event.preventDefault();*/}
-                                        {/*                              window.open(decodeURIComponent(message.mes))*/}
-                                        {/*                          }}>{decodeURIComponent(message.mes)}</a>*/}
-                                        {/*                        <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>*/}
-                                        {/*                </h6>*/}
-                                        {/*            </h6>*/}
-                                        {/*        </div>*/}
-                                        {/*    }*/}
-                                        {/*</div>*/}
-                                        {/*goi thoai*/}
-
-                                    </div>
-
+                                    )
                                 )
-                            )
-                            }
+                                }
 
-                        </div>
+                            </div>
+                        }
+                        {/*tin nhắn nhóm*/}
+                        {this.props.isMessenger === false && this.props.isJoin === false &&
+                            <div>
+                                {sortMess.map((message, index) => (
+                                        <div>
+                                            <div>
+                                                {message.name === "20130433" && !message.mes.startsWith("https") &&
+                                                    <div className="mess frnmess">
+                                                        <h6>
+                                                            <h6 key={index}>
+                                                                <img  src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className="messFr"></img>
+                                                                <h6>{message.name}</h6>
+                                                                <p>{decodeURIComponent(message.mes)}
+                                                                    <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
+                                                            </h6>
+                                                        </h6>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div>
+                                                {message.name === "20130433" && message.mes.startsWith("https") &&
+                                                    <div className="mess mymess">
+                                                        <h6>
+                                                            <h6 key={index}>
+                                                                <h6>{message.name}</h6>
+                                                                <img src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className={'messFr'}></img>
+                                                                <p >  <img className="img_chat" src={decodeURIComponent(message.mes)} alt=""/>
+                                                                    <br/>
+                                                                    <p>
+                                                                        <span>{convertServerTimeToClientTime(message.createAt)}</span></p></p>
+                                                            </h6>
+                                                        </h6>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div>
+                                                {message.name === "20130423" && message.mes.startsWith("https") &&
+                                                    <div className="mess mymess ">
+                                                        <h6>
+                                                            <h6 key={index}>
+                                                                <img src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className={'messFr'}></img>
+                                                                <h6>{message.name}</h6>
+                                                                <p><img className="img_chat" src={decodeURIComponent(message.mes)} alt=""/>
+                                                                    <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
+                                                            </h6>
+                                                        </h6>
+                                                    </div>
+                                                }
+                                            </div>
+                                            {/*201304388*/}
+                                            <div>
+                                                {message.name === "20130388" && message.mes.startsWith("https") &&
+                                                    <div className="mess frnmess">
+                                                        <h6>
+                                                            <h6 key={index}>
+                                                                <img src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className={'messFr'}></img>
+                                                                <h6>{message.name}</h6>
+                                                                <p >  <img className="img_chat"  src={decodeURIComponent(message.mes)} alt=""/>
+                                                                    <br/>
+                                                                    <p>
+                                                                        <span>{convertServerTimeToClientTime(message.createAt)}</span></p></p>
+                                                            </h6>
+                                                        </h6>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div>
+                                                {message.name === "20130423" &&  !message.mes.startsWith("https") &&  !message.mes.startsWith("http") &&
+                                                    <div className="mess frnmess">
+                                                        <h6>
+                                                            <h6 key={index}>
+                                                                <img src={"https://i.pinimg.com/564x/b1/78/32/b17832ed39fd47db601a525e963050a2.jpg"} className={'messFr'}></img>
+                                                                <h6>{message.name}</h6>
+                                                                <p>{decodeURIComponent(message.mes)}
+                                                                    <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
+                                                            </h6>
+                                                        </h6>
+
+                                                    </div>
+                                                }
+                                            </div>
+                                            {/* 22*/}
+                                            <div>
+                                                {message.name === "20130388" && !message.mes.startsWith("https") &&
+                                                    <div className="mess mymess">
+                                                        <h6>
+                                                            <h6 key={index}>
+                                                                <img src={"https://timanhdep.com/wp-content/uploads/2022/06/hinh-nen-cute-anh-nen-cute-dang-yeu-nhat-the-gioi-01.jpg"}></img>
+                                                                <h6>{message.name}</h6>
+                                                                <p>{decodeURIComponent(message.mes)}
+                                                                    <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
+                                                            </h6>
+                                                        </h6>
+                                                    </div>
+                                                }
+                                            </div>
+
+                                            {/*<div>*/}
+                                            {/*    {message.name === "20130423" && !message.mes.endsWith("VideoCall") || message.name === "20130423"  && message.mes.startsWith("https") || message.name === "20130433" && !message.mes.startsWith("https") &&*/}
+                                            {/*        <div className="mess frnmess">*/}
+                                            {/*            <h6>*/}
+                                            {/*                <h6 key={index}>*/}
+
+                                            {/*                    <h6>{message.name}</h6>*/}
+                                            {/*                    <p><a href={decodeURIComponent(message.mes)} target="_blank"*/}
+                                            {/*                          onClick={(event) => {*/}
+                                            {/*                              event.preventDefault();*/}
+                                            {/*                              window.open(decodeURIComponent(message.mes))*/}
+                                            {/*                          }}>{decodeURIComponent(message.mes)}</a>*/}
+                                            {/*                        <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>*/}
+                                            {/*                </h6>*/}
+                                            {/*            </h6>*/}
+
+                                            {/*        </div>*/}
+                                            {/*    }*/}
+                                            {/*</div>*/}
+                                            {/*    */}
+
+                                            <div>
+                                                {  message.mes.endsWith("VideoCall") &&
+                                                    <div className="mess frnmess">
+                                                        <h6>
+                                                            <h6 key={index}>
+                                                                <img src={"https://i.pinimg.com/564x/b1/78/32/b17832ed39fd47db601a525e963050a2.jpg"} className={'messFr'}></img>
+                                                                <h6>{message.name}</h6>
+                                                                <p className="red-text">video gọi thoại :<a href='http://localhost:3000/room/VideoCall' >{decodeURIComponent(message.mes)}</a>
+                                                                    <br/><span>{message.createAt}</span></p>
+                                                            </h6>
+                                                        </h6>
+                                                    </div>
+                                                }
+                                            </div>
+
+                                            {/*<div>*/}
+                                            {/*    {message.name === "20130388" && message.mes.startsWith("https") &&*/}
+                                            {/*        <div className="mess mymess">*/}
+                                            {/*            <h6>*/}
+                                            {/*                <h6 key={index}>*/}
+                                            {/*                    <h6>{message.name}</h6>*/}
+                                            {/*                    <p><a href={decodeURIComponent(message.mes)} target="_blank"*/}
+                                            {/*                          onClick={(event) => {*/}
+                                            {/*                              event.preventDefault();*/}
+                                            {/*                              window.open(decodeURIComponent(message.mes))*/}
+                                            {/*                          }}>{decodeURIComponent(message.mes)}</a>*/}
+                                            {/*                        <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>*/}
+                                            {/*                </h6>*/}
+                                            {/*            </h6>*/}
+                                            {/*        </div>*/}
+                                            {/*    }*/}
+                                            {/*</div>*/}
+                                            {/*goi thoai*/}
+
+                                        </div>
+
+                                    )
+                                )
+                                }
+
+                            </div>
+                        }
+
 
                     </div>
 

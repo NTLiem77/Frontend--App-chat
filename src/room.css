@@ -383,6 +383,9 @@
     margin-top: 5px;
     margin-left: 30px;
 }
+.container1 .right-sidebar{
+    background: #EEF0F1 !important;
+}
 .right-sidebar .search-chat i{
     position: absolute;
     left: 30px;
@@ -474,3 +477,15 @@ p.red-text {
     margin-left: 20px;
 }
 .pointer {cursor: pointer;}
+.chatbox h2{
+    font-size: 2rem;
+    text-align: center;
+    margin: 20px 0 50px 0;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+.chatbox img {
+    margin-top: 20px;
+    margin-left: 305px;
+    width: 300px;
+    height: 300px;
+}
