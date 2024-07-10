@@ -105,12 +105,12 @@
                         newSocket.close();
 
                     };
-                }, []);
-                // xét lại giá tra (mặc định là false);
+                },[]);
+// xét lại giá tra (mặc định là false);
                 const handlePosClick = () => {
                     setEmojiPickerVisible(!isEmojiPickerVisible);
                 };
-                // clcik chọn emoij
+// clcik chọn emoij
                 const handleEmojiClick = (emoji) => {
                     setSelectedEmoji(emoji.emoji); // chọn emoij
                     // thêm nhiều emoij + vào trong mess -> xét lại các giá trị
@@ -161,8 +161,7 @@
                     // sau khi tạo thì load lại danh sach phong, người dùng
                     handGetUserList()
                 }
-
-                //xử lý join room
+            //xử lý join room
                 const handJoinRoom = (roomName) => {
 
                     if (socket) {
@@ -326,30 +325,6 @@
                     }
                 }
 
-                function file(event) {
-                    const file = event.target.files[0];
-                    setMess(file.name);
-                }
-
-                const Tranlate = () => {
-                    navigate("/Incomingvideo");
-                }
-
-                // file đang làm
-
-
-                // làm video call
-                const [nameVideoRoom, setNameVideoRoom] = useState("VideoCall")
-
-                const handleVideoCall = useCallback(() => {
-                    navigate(`/room/${nameVideoRoom}`);
-                    setisClickvideo(true);
-                }, [navigate, nameVideoRoom])
-// gửi link xuong  tin nhắn
-                const videoCall = (room, mess) => {
-                    videocall(room, mess).then(handleVideoCall);
-                }
-
                 // sau khi kết nối websocket thành công
                 useEffect(() => {
                     if (socket){
@@ -360,95 +335,70 @@
                                     setIsLoginSuccess(true);
                                     // lưu trữ thông tin đăng nhập
                                     setToken(responseData.data.tokens);
-                                    sessionStorage.setItem("login", responseData.event);
-                                    const login = sessionStorage.getItem("login");
                                     // luu tru RE_LOGIN_CODE
                                     // tai sao dung session
-                                    sessionStorage.setItem("codeNlu", responseData.data.RE_LOGIN_CODE);
+                                    sessionStorage.setItem("codeNlu" , responseData.data.RE_LOGIN_CODE);
                                     sessionStorage.setItem("success", responseData.status);
                                     navigate("/home");
-                                    // lay ra danh sach nguoi dung, phong
                                     handGetUserList();
-                                    setisJoin(true)
-                                } else {
-                                    setErrorMsg("Đăng nhập không thành công");
+                                }else {
+                                  setErrorMsg("Đăng nhập không thành công");
                                 }
-                                if (responseData.event === "LOGOUT" && responseData.status === "success" && responseData.data === "You are Logout!") {
-                                    setIsLoginSuccess(false);
-                                    const newSocket = new WebSocket("ws://140.238.54.136:8080/chat/chat");
-                                    setSocket(newSocket);
-                                    setErrorMsg("")
-                                    // lấy ra danh sách người dùng, phòng
-                                    handGetUserList();
-                                    navigate("/login");
-                                }
+                      if(responseData.event === "LOGOUT" && responseData.status === "success" &&responseData.data === "You are Logout!" ){
+                          setIsLoginSuccess(false);
+                          const newSocket = new WebSocket("ws://140.238.54.136:8080/chat/chat");
+                          setSocket(newSocket);
+                          setErrorMsg("")
+                          handGetUserList();
+                          navigate("/login");
+                        }
 
                                 // get room chat mess
-                                if (responseData.event === "GET_ROOM_CHAT_MES" && responseData.status === "success") {
-                                    const room = localStorage.getItem("nameRoom");
-                                    const name = sessionStorage.getItem("name");
-                                    setMess("");
-
-                                    handJoinRoom(room);
-                                }
-                                // ma relogin chi ddung 1 lan
-                                // relogin
-                                if (responseData.event === "RE_LOGIN" && responseData.status === "success") {
-                                    setIsLoginSuccess(true);
-                                    // lấy ra danh sách người dùng, phòng
-                                    handGetUserList();
-                                    const room = localStorage.getItem("nameRoom");
-                                    handJoinRoom(room);
-                                }
-                                // relogin het thoi gian
-                                if (responseData.event === "RE_LOGIN" && responseData.status ===
-                                    "error" && responseData.mes === "Re-Login error, Code error or you are overtime to relogin!") {
-                                    setIsLoginSuccess(false);
-                                    sessionStorage.setItem("Relogin", responseData.data);
-                                    setErrorMsg("");
-                                }
-                                // gửi tin nhắn thành công
-                                if (responseData.event === "SEND_CHAT" && responseData.status === "success") {
-                                    localStorage.setItem("mes", responseData.data.mes);
-                                    localStorage.setItem("messname", responseData.data.name);
-                                    console.log(responseData.chatData);
-                                    // để hiển thị danh sách thì ta phải lập lại việc join room trước đó
-                                    // lấy giá tr của room đã lưu tr dựa vào handJoinRoom(room)
-                                    const room = localStorage.getItem("nameRoom");
-                                    handJoinRoom(room);
-                                }
-                                // joinRoom
-                                if (responseData.event === "JOIN_ROOM" && responseData.status === "success") {
-                                    localStorage.setItem("nameRoom", responseData.data.name);
-                                    setMessege(responseData.data.chatData);
-                                    localStorage.setItem("ownner", responseData.data.own);
-                                    const ownner = localStorage.getItem("ownner");
-                                    setisMessenger(false);
-                                    setisJoin(false);
-                                }
-
-                            // kểm tra phòng tồn tại chưa
-                            if (responseData.event === "CREATE_ROOM" && responseData.status === "error"){
-                                alert("Room exsits")
+                            if(responseData.event === "GET_ROOM_CHAT_MES" && responseData.status === "success"){
+                                const  room = localStorage.getItem("nameRoom");
+                                const name = sessionStorage.getItem("name");
+                                handJoinRoom(room);
                             }
+                            // ma relogin chi ddung 1 lan
+                            // relogin
+                            if(responseData.event ==="RE_LOGIN"  && responseData.status === "success"){
+                                setIsLoginSuccess(true);
+                                handGetUserList();
+                                const room = localStorage.getItem("nameRoom");
+                                handJoinRoom(room);
+                            }
+                            // relogin het thoi gian
+                            if(responseData.event === "RE_LOGIN" && responseData.status ===
+                                "error" && responseData.mes === "Re-Login error, Code error or you are overtime to relogin!"){
+                                setIsLoginSuccess(false);
+                                setErrorMsg("");
 
-                            if(responseData.event === "GET_PEOPLE_CHAT_MES" && responseData.status === "success" ) {
-                                setisMessenger(true);
+
+                            }
+                            // gửi tin nhắn thành công
+                            if (responseData.event === "SEND_CHAT" && responseData.status === "success"){
+                                setisMess(true);
+                                localStorage.setItem("mes", responseData.data.mes);
+                                localStorage.setItem("messname", responseData.data.name);
+                                console.log(responseData.chatData);
                                 setMess("");
-                                const dulieu = responseData.data;
-                                setMessege(responseData.data);
-                                setisJoin(false);
-
+                                // để hiển thị danh sách thì ta phải lập lại việc join room trước đó
+                                // lấy giá tr của room đã lưu tr dựa vào handJoinRoom(room)
+                                const room = localStorage.getItem("nameRoom");
+                                handJoinRoom(room);
+                            }
+// joinroom
+                            if (responseData.event === "JOIN_ROOM" && responseData.status === "success") {
+                                localStorage.setItem("nameRoom", responseData.data.name);
+                                setMessege(responseData.data.chatData);
+                                localStorage.setItem("ownner", responseData.data.own);
+                                const ownner = localStorage.getItem("ownner");
 
                             }
-                                // check user
-                                if (responseData.event === "CHECK_USER" && responseData.status === "success") {
-                                    const room = localStorage.getItem("nameRoom");
-                                    sessionStorage.setItem("success" ,responseData.status );
-                                    sessionStorage.setItem("checkuser" ,responseData.event );
-                                    // lấy ra danh sách người dùng, phòng
-                                    // handGetUserList();
-                                }
+                             // check user
+                            if (responseData.event === "CHECK_USER" && responseData.status === "success"){
+                                console.log(responseData.data.status);
+                            }
 
                                 // lay ra danh sach nguoi dung, phong
                                 if (responseData.event === "GET_USER_LIST" && responseData.status === "success") {
