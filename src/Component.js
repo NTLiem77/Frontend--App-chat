@@ -43,30 +43,38 @@
 
                 //uploadFile
                 const [imageUpload, setImageUpload] = useState(null);
-                const [imageUrls, setImageUrls] = useState();
+                const [imageUrls, setImageUrls] = useState([]);
 
-                const imagesListRef = ref(storage, "images/");
-                const uploadFile = () => {
-                    if (imageUpload == null){
-                        return;
-                    }
-                    const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
-                    uploadBytes(imageRef, imageUpload).then((snapshot) => {
-                        getDownloadURL(imageRef).then((url) => {
-                            setImageUrls(url)
-                        })
-                        // getDownloadURL(snapshot.ref).then((url) => {
-                        //     setImageUrls((prev) => [...prev, url]);
-                        //     // setImageUrls(url)
-                        // });
-                    });
+                const changImage = (file) => {
+                    return new Promise((resolve) => {
+                        if (file == null){
+                            return;
+                        }
+                        const imageRef = ref(storage, `images/${file.name + v4()}`);
+                        uploadBytes(imageRef, file).then((snapshot) => {
+                            getDownloadURL(snapshot.ref).then((url) => {
+                                console.log("image tests " + url);
+                                setImageUrls((prev) => [...prev, url]);
+
+                                resolve(url);
+                            });
+                        });
+                    })
                 }
+                const setLinkImage = (url) => {
+                    setMess(url);
+                }
+                const handleChangImage = (roomName) => {
+                    changImage(roomName).then((result) => setLinkImage(result));
+                }
+                const imagesListRef = ref(storage, "images/");
+
                 useEffect(() => {
                     listAll(imagesListRef).then((response) => {
                         response.items.forEach((item) => {
                             getDownloadURL(item).then((url) => {
-                                // setImageUrls((prev) => [...prev, url]);
-                                setImageUrls(url);
+                                setImageUrls((prev) => [...prev, url]);
+                                // setImageUrls(url);
                             });
                         });
                     });
@@ -244,7 +252,6 @@
 
                 const twoMessChat = (roomName) => {
                     messchat(roomName).then(get_room_mess_chat(roomName));
-                    uploadFile()
                 }
 
                 // get people chat mess
@@ -289,7 +296,6 @@
                 }
                 const twoMessChatPeople = (roomName) => {
                     messPeople(roomName).then(GET_PEOPLE_CHAT_MES(roomName));
-                    uploadFile()
                 }
 
                 // check user
@@ -503,9 +509,9 @@
                                         setImageUpload = {setImageUpload}
                                         imageUpload = {imageUpload}
                                         imageUrls = {imageUrls}
-                                        uploadFile = {uploadFile}
                                         isJoin = {isJoin}
                                         setisJoin = {setisJoin}
+                                        handleChangImage = {handleChangImage}
                                     />
                                 }
                                 {isLoginSuccess == false &&
