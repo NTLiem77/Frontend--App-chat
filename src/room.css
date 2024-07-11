@@ -23,7 +23,7 @@
 .container1 .right-sidebar{
     position: relative;
     flex: 70%;
-    background: #e5ddd5;
+    background: #f3efe9;
 }
 .container1 .right-sidebar::before{
     content: "";
@@ -477,13 +477,13 @@ p.red-text {
     margin-left: 20px;
 }
 .pointer {cursor: pointer;}
-.chatbox h2{
+.chatbox .interface h2{
     font-size: 2rem;
     text-align: center;
     margin: 20px 0 50px 0;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
-.chatbox img {
+.chatbox .interface img {
     margin-top: 20px;
     margin-left: 305px;
     width: 300px;

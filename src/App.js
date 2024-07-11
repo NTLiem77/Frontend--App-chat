@@ -1,10 +1,10 @@
-import logo from './logo.svg';
 import './App.css';
 
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Component from './Component';
 import Register from './Register';
+import RoomVideoCall from './VideoCall/index'
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import LoginForm from "./LoginForm";
@@ -19,6 +19,7 @@ function App() {
               <Route path="/home" element={<Component/>} />
               <Route path="/login"  element={<Component /> }  />
             <Route path="/register" element={<Register />} />
+              <Route path="/room/:roomId" element={<RoomVideoCall/>} />
           </Routes>
       </Router>
     </div>
