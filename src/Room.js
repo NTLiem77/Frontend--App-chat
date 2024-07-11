@@ -27,12 +27,16 @@ export function convertServerTimeToClientTime(serverTime) {
 export default class Room extends React.Component{
 
     render() {
-        sessionStorage.setItem("mesnam", this.props.user);
-
-        const mesnam =  sessionStorage.getItem("mesnam");
-        const username =  sessionStorage.getItem("name1");
+        const  data = sessionStorage.getItem("dataTo");
+        const username =  sessionStorage.getItem("username");
+        //
+        sessionStorage.setItem("use" , username);
         // lay ten phong
         const nameRoom = localStorage.getItem("nameRoom");
+        const sortMess = this.props.messege.sort((a, b) => a.id - b.id);
+        const  url =sessionStorage.getItem("linkcall");
+
+        const count  = sessionStorage.getItem("count" );
         return <div>
 
             <div className="container1">
@@ -126,16 +130,17 @@ export default class Room extends React.Component{
 
                                     {/*<span>Online</span>*/}
                             </div>
+                            // tin nhắn người
                         } {this.props.isMessenger === false && this.props.isJoin === false &&
                         <div className={"imgtext"}>
                             <div className={"user-avatar"}>
                                 <img src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-3.jpg" className={"img-cover"}/>
                             </div>
-                            <i className="fa-solid fa-user-plus"></i>
-                            <p>{nameRoom}<br/><span>online</span></p>
+                            <p className={"author_mess"}>{nameRoom}<br/>
+                                <span>{count} thành viên</span></p>
                         </div>
                     }
-
+                    {/*tin nhắn nhóm*/}
                         {this.props.isMessenger === true && this.props.isJoin === false &&
                             <div className={"imgtext"}>
                                 <div className={"user-avatar"}>
@@ -198,9 +203,9 @@ export default class Room extends React.Component{
                     {/*Chat box*/}
                     <div className="chatbox">
                         {this.props.isJoin === true &&
-                            <div>
+                            <div className={"interface"}>
                                 <h2>Chào mừng bạn đến App Chat của nhóm 11!</h2>
-                                <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQz6C4Pptuv_HeluHFtNhTP81KE1ZyojghTqg&usqp=CAU"}></img>
+                                <img src={"https://firebasestorage.googleapis.com/v0/b/uploadingfile-eb7e8.appspot.com/o/images%2Fanh4.jpg54d3c648-c04d-4b70-a530-2381b137048a?alt=media&token=861a8532-c9c9-4704-b0b9-01ae1825c9fa"}></img>
                             </div>
                         }
                         {/*tin nhắn người*/}
@@ -528,10 +533,39 @@ export default class Room extends React.Component{
                     </div>
 
                     <div className="chat-input-right">
-                   <div id="pos" onClick={this.props.handPosClick}>   <i className="fa-regular fa-face-smile"></i></div>
-                        <i className="fa-solid fa-paperclip"></i>
-                        <input type="text" placeholder="Type a massage"/>
-                        <i className="fa-solid fa-paper-plane"></i>
+                        <div id="pos" onClick={this.props.handPosClick}>
+                            <i className="fa-regular fa-face-smile"></i>
+                        </div>
+                        <div>
+                            <input type={"file"} accept={'image/*'} className={'input-field'} hidden
+                                   onChange={(event) => {
+                                       this.props.setImageUpload(event.target.files[0]);
+                                       this.props.setMess(this.props.imageUrls)
+                                   }}
+                            />
+                            <i className="fa-solid fa-paperclip"
+                               onClick={() => document.querySelector(".input-field").click()}>
+                            </i>
+                        </div>
+                        { this.props.isMessenger === false ?(
+                            <input type="text" placeholder="Type a message" value={this.props.messenger}
+                                   onChange={(e) => this.props.setMess(e.target.value)} onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                    this.props.twoMessChat(nameRoom);
+                                }
+                            }} fdprocessedid="61a96k"/>
+                        ) :(  <input type="text" placeholder="Type a message" value={this.props.messenger}
+                                      onChange={(e) => this.props.setMess(e.target.value)} onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                                this.props.twoMessChatPeople(data);
+                            }
+                        }} fdprocessedid="61a96k"/>)
+                        }
+                        {this.props.isMessenger == false ?(
+                            <ion-icon onClick={() => this.props.twoMessChat( nameRoom)} name="send" role="img"
+                                      className="md hydrated" aria-label="send"></ion-icon>
+                        ) :(  <ion-icon onClick={() => this.props.twoMessChatPeople(data)} name="send" role="img"
+                                        className="md hydrated" aria-label="send">hi</ion-icon>)}
                     </div>
                 </div>
                 <div className="icon_Emoid">
@@ -542,9 +576,6 @@ export default class Room extends React.Component{
                     )}
                 </div>
             </div>
-
         </div>
-
-
     }
 }
