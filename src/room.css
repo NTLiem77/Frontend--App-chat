@@ -23,7 +23,7 @@
 .container1 .right-sidebar{
     position: relative;
     flex: 70%;
-    background: #f3efe9;
+    background: #e5ddd5;
 }
 .container1 .right-sidebar::before{
     content: "";
@@ -56,7 +56,9 @@
     font-size: 16px;
     cursor: pointer;
 }
-
+.header-chat .icon-nav li i{
+    margin-top: 7px;
+}
 .user-avatar{
     position: relative;
     height: 40px;
@@ -65,16 +67,6 @@
     border-radius: 50%;
     cursor: pointer;
 }
-.icon-nav {
-    position: relative;
-}
-.icon-nav i{
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    cursor: pointer;
-}
-
 .imgtext1 {
     position: relative;
     display: flex;
@@ -252,25 +244,6 @@
     padding: 50px;
     overflow-y: auto;
 }
-.chatbox .mess.frnmess p{
-    position: relative;
-    right: -2px;
-    text-align: right;
-    max-width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    font-size: 0.9em;
-}
-.chatbox .mess.mynmess p{
-    position: relative;
-    right: -18px;
-    text-align: right;
-    max-width: 100%;
-    padding: 12px;
-    background: #dcf8c6;
-    border-radius: 10px;
-    font-size: 0.9em;
-}
 .mess{
     position: relative;
     display: flex;
@@ -279,13 +252,13 @@
 }
 .mess p{
     position: relative;
+    right: 20px;
     text-align: right;
     max-width: 100%;
     padding: 12px;
-    background: #fff;
+    background: #dcf8c6;
     border-radius: 10px;
-    font-size: 0.9em;
-    margin-right: 20px;
+    font-size: 0.9em
 }
 .mess p::before{
     content: '';
@@ -294,7 +267,7 @@
     right: -12px;
     width: 20px;
     height: 20px;
-    background:  linear-gradient(135deg, #fff 0%, #fff 50%, transparent 50%, transparent)
+    background:  linear-gradient(135deg, #dcf8c6 0%, #dcf8c6 50%, transparent 50%, transparent)
 }
 .mess p span{
     font-size: 0.85em;
@@ -311,9 +284,6 @@
 .frnmess p{
     background: #fff;
     text-align: left;
-}
-.img_chat{
-    width: 300px
 }
 .frnmess p::before{
     content: '';
@@ -336,10 +306,6 @@
     position: absolute;
     bottom: 0;
     margin-top: 10px;
-}
-.chat-input-right .md.hydrated{
-    font-size: 20px;
-    cursor: pointer;
 }
 .chat-input-left{
     width: 100%;
@@ -383,9 +349,6 @@
     margin-top: 5px;
     margin-left: 30px;
 }
-.container1 .right-sidebar{
-    background: #EEF0F1 !important;
-}
 .right-sidebar .search-chat i{
     position: absolute;
     left: 30px;
@@ -418,10 +381,7 @@
 .mess.mymess{
     position: relative;
 }
-
-
-
-.mess.mymess h6 h6 > img{
+.mess.mymess img{
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -429,7 +389,6 @@
     right: -43px;
     top: 7px;
 }
-
 .mess.frnmess{
     position: relative;
 }
@@ -441,51 +400,7 @@
     top: 10px;
     left: -20px;
 }
-.group1{
-    margin-left:  50%;
-}
-
-.m_l.call_end {
-    color: red;
-    font-size: 36px;
-}
-p.red-text {
-    color: red;
-}
-.call{
-    font-size: 36px;
-    color: green !important;
-}
-.flex-group{
-    justify-content: space-between;
-
-}
-.m_l{
-    margin-left: -221px;
-
-}
-.user-group1{
-    position: relative;
-    height: 200px;
-    width: 200px;
-    overflow: hidden;
-    border-radius: 50%;
-    cursor: pointer;
-    margin: 32px -21px;
-}
 .mess.frnmess h6{
     margin-left: 20px;
 }
 .pointer {cursor: pointer;}
-.chatbox .interface h2{
-    font-size: 2rem;
-    text-align: center;
-    margin: 20px 0 50px 0;
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-}
-.chatbox .interface img {
-    margin-top: 20px;
-    margin-left: 305px;
-    width: 300px;
-    height: 300px;
-}
