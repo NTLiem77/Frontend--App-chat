@@ -56,9 +56,7 @@
     font-size: 16px;
     cursor: pointer;
 }
-.header-chat .icon-nav li i{
-    margin-top: 7px;
-}
+
 .user-avatar{
     position: relative;
     height: 40px;
@@ -67,6 +65,16 @@
     border-radius: 50%;
     cursor: pointer;
 }
+.icon-nav {
+    position: relative;
+}
+.icon-nav i{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+}
+
 .imgtext1 {
     position: relative;
     display: flex;
@@ -244,6 +252,25 @@
     padding: 50px;
     overflow-y: auto;
 }
+.chatbox .mess.frnmess p{
+    position: relative;
+    right: -2px;
+    text-align: right;
+    max-width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.9em;
+}
+.chatbox .mess.mynmess p{
+    position: relative;
+    right: -18px;
+    text-align: right;
+    max-width: 100%;
+    padding: 12px;
+    background: #dcf8c6;
+    border-radius: 10px;
+    font-size: 0.9em;
+}
 .mess{
     position: relative;
     display: flex;
@@ -306,6 +333,10 @@
     position: absolute;
     bottom: 0;
     margin-top: 10px;
+}
+.chat-input-right .md.hydrated{
+    font-size: 20px;
+    cursor: pointer;
 }
 .chat-input-left{
     width: 100%;

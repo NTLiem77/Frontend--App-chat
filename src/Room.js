@@ -113,14 +113,12 @@ export default class Room extends React.Component{
                             <span>Online</span></p>
                         </div>
 
-                        <div className={"icon-nav"}>
-                            <li>
-                                <ion-icon name={"search-outline"} role={"img"} className={"md hydrated"} aria-label={"ellipsis vertical"}></ion-icon>
+                        <ul className="icon-nav">
+                            <li onClick={this.props.handleVideoCall}>
+                                <i className="fa-solid fa-video"></i>
                             </li>
-                        </div>
-
-                        {/*logout*/}
-                        <li className={"logout pointer"} onClick={this.props.handLougout}>Đăng xuất</li>
+                            <li className="lougout" onClick={this.props.handLougout}>Đăng xuất</li>
+                        </ul>
                     </div>
 
                     {/*Check User*/}
@@ -234,9 +232,14 @@ export default class Room extends React.Component{
                            <div id="pos" onClick={this.props.handPosClick}>
                                <i className="fa-regular fa-face-smile"></i>
                            </div>
-                                <i className="fa-solid fa-paperclip"></i>
+                                <div>
+                                    <input type={"file"} accept={'image/*'} className={'input-field'} hidden
+                                           onChange={this.props.handleImageChange}/>
+                                    <i className="fa-solid fa-paperclip"  onClick={() => document.querySelector(".input-field").click()}></i>
+                                </div>
                                 <input className="pointer" type="text" placeholder="Type a massage"/>
-                                <i className="fa-solid fa-paper-plane"></i>
+                        <ion-icon onClick={() => this.props.twoMessChat(nameRoom)} name="send" role="img"
+                                  className="md hydrated" aria-label="send"></ion-icon>
                             </div>
 
                             <input type="text" placeholder="Type a message" value={this.props.messenger}
@@ -245,8 +248,7 @@ export default class Room extends React.Component{
                                     this.props.twoMessChat(nameRoom);
                                 }
                             }} fdprocessedid="61a96k"/>
-                            <ion-icon onClick={() => this.props.twoMessChat(nameRoom)} name="send" role="img"
-                                      className="md hydrated" aria-label="send">hello</ion-icon>
+
                         </div>
                         <div className="icon_Emoid">
                             {this.props.isEmojiPickerVisible && (
