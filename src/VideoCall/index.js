@@ -3,7 +3,7 @@ import React from "react";
 import {ZegoUIKitPrebuilt} from '@zegocloud/zego-uikit-prebuilt'
 const RoomVideoCall = () =>{
     const {roomId} = useParams();
-
+const  susscess = sessionStorage.getItem("mesnam")
     const myVideoCall = async (element) =>{
         const appID = 1676139371;
         const serverSecret ="559e9a46e4993c6015e4387f20042c36"
@@ -12,7 +12,8 @@ const RoomVideoCall = () =>{
             serverSecret,
             roomId,
             Date.now().toString(),
-            "Tien"
+            susscess
+
         );
         const zc = ZegoUIKitPrebuilt.create(kitToken);
         zc.joinRoom({
@@ -26,7 +27,12 @@ const RoomVideoCall = () =>{
 
     return(
         <div>
-            <div ref={myVideoCall}/>
+
+            <p>alo
+                <div ref={myVideoCall}></div>
+
+            </p>
+
         </div>
     )
 }

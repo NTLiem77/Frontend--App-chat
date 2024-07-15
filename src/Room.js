@@ -3,6 +3,21 @@ import EmojiPicker from "emoji-picker-react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSquarePlus} from "@fortawesome/free-solid-svg-icons";
 import './room.css'
+import moment from 'moment-timezone';
+
+export function convertServerTimeToClientTime(serverTime) {
+    // Chuyển đổi thời gian ICT thành đối tượng Moment
+    const ictMoment = moment(serverTime).tz('Asia/Ho_Chi_Minh');
+
+    // Chuyển đổi sang múi giờ của Việt Nam (GMT+7)
+    const vnMoment = ictMoment.clone().add(7, 'hours');
+
+    // Định dạng lại thành chuỗi để hiển thị cho người dùng
+    const formattedVNTime = vnMoment.format('DD-MM-YYYY HH:mm:ss');
+
+    // Trả về thời gian của Việt Nam dưới dạng chuỗi
+    return formattedVNTime;
+}
 
 export default class Room extends React.Component{
     render() {
@@ -53,7 +68,7 @@ export default class Room extends React.Component{
                     {/*search chat*/}
                     <div className="search-chat">
                         <div>
-                            <input className="pointer" type="text" placeholder="Search or start new chat" fdprocessedid="hss68p"/>
+                            <input  id="search" className="pointer" type="text" placeholder="Search or start new chat" fdprocessedid="hss68p"/>
                             <ion-icon name="search-outline" role="img" className="md hydrated" aria-label="search outline">
                             </ion-icon>
                         </div>
@@ -141,7 +156,7 @@ export default class Room extends React.Component{
                                                             <img src={"https://i.pinimg.com/474x/13/66/24/13662403df40419741a2858e38135a5c.jpg"} className={'messFr'}></img>
                                                             <h6>{message.name}</h6>
                                                             <p>{decodeURIComponent(message.mes)}
-                                                                <br/><span>{message.createAt}</span></p>
+                                                                <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
                                                         </h6>
                                                     </h6>
                                                 </div>
@@ -155,7 +170,7 @@ export default class Room extends React.Component{
                                                             <img src={"https://i.pinimg.com/564x/b1/78/32/b17832ed39fd47db601a525e963050a2.jpg"} className={'messFr'}></img>
                                                             <h6>{message.name}</h6>
                                                             <p>{decodeURIComponent(message.mes)}
-                                                                <br/><span>{message.createAt}</span></p>
+                                                                <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
                                                         </h6>
                                                     </h6>
 
@@ -171,7 +186,7 @@ export default class Room extends React.Component{
                                                             <img src={"https://timanhdep.com/wp-content/uploads/2022/06/hinh-nen-cute-anh-nen-cute-dang-yeu-nhat-the-gioi-01.jpg"}></img>
                                                             <h6>{message.name}</h6>
                                                             <p>{decodeURIComponent(message.mes)}
-                                                                <br/><span>{message.createAt}</span></p>
+                                                                <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
                                                         </h6>
                                                     </h6>
                                                 </div>
@@ -190,7 +205,7 @@ export default class Room extends React.Component{
                                                                       event.preventDefault();
                                                                       window.open(decodeURIComponent(message.mes))
                                                                   }}>{decodeURIComponent(message.mes)}</a>
-                                                                <br/><span>{message.createAt}</span></p>
+                                                                <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
                                                         </h6>
                                                     </h6>
 
@@ -209,7 +224,7 @@ export default class Room extends React.Component{
                                                                       event.preventDefault();
                                                                       window.open(decodeURIComponent(message.mes))
                                                                   }}>{decodeURIComponent(message.mes)}</a>
-                                                                <br/><span>{message.createAt}</span></p>
+                                                                <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
                                                         </h6>
                                                     </h6>
                                                 </div>
@@ -237,17 +252,17 @@ export default class Room extends React.Component{
                                            onChange={this.props.handleImageChange}/>
                                     <i className="fa-solid fa-paperclip"  onClick={() => document.querySelector(".input-field").click()}></i>
                                 </div>
-                                <input className="pointer" type="text" placeholder="Type a massage"/>
+                        <input type="text" placeholder="Type a message" value={this.props.messenger}
+                               onChange={(e) => this.props.setMess(e.target.value)} onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                                this.props.twoMessChat(nameRoom);
+                            }
+                        }} fdprocessedid="61a96k"/>
                         <ion-icon onClick={() => this.props.twoMessChat(nameRoom)} name="send" role="img"
                                   className="md hydrated" aria-label="send"></ion-icon>
                             </div>
 
-                            <input type="text" placeholder="Type a message" value={this.props.messenger}
-                                   onChange={(e) => this.props.setMess(e.target.value)} onKeyPress={(e) => {
-                                if (e.key === 'Enter') {
-                                    this.props.twoMessChat(nameRoom);
-                                }
-                            }} fdprocessedid="61a96k"/>
+
 
                         </div>
                         <div className="icon_Emoid">

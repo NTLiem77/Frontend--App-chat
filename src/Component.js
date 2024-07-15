@@ -72,11 +72,11 @@
 
                     };
                 },[]);
-// xét lại giá tra (mặc định là false);
+                // xét lại giá tra (mặc định là false);
                 const handlePosClick = () => {
                     setEmojiPickerVisible(!isEmojiPickerVisible);
                 };
-// clcik chọn emoij
+                // clcik chọn emoij
                 const handleEmojiClick = (emoji) => {
                     setSelectedEmoji(emoji.emoji); // chọn emoij
                     // thêm nhiều emoij + vào trong mess -> xét lại các giá trị
@@ -164,20 +164,23 @@
                 // send chat room
                 const messchat = (roomName) => {
                     return new Promise((resolve) => {
-                        if(socket){
+                        if (socket) {
                             const mess1 = {
-                                action: "SEND_CHAT",
-                                data:{
-                                    type: "room",
-                                    to: roomName,
-                                    mes: encodeURIComponent(messenger)
+                                action: "onchat",
+                                data: {
+                                    event: "SEND_CHAT",
+                                    data: {
+                                        type: "room",
+                                        to: roomName,
+                                        mes: encodeURIComponent(messenger)
+                                    }
                                 }
-
                             }
+
                             socket.send(JSON.stringify(mess1));
                             resolve();
                         }
-                    })
+                    });
                 }
 
                 const twoMessChat = (roomName) =>{
@@ -221,7 +224,6 @@
                                 resolve();
                             }
                         )}
-
                 }
 
             // check user
@@ -265,12 +267,22 @@
                         setMess(fileName);
                     }
                 }
+
+                // làm video call
                 const [nameVideoRoom, setNameVideoRoom] = useState("VideoCall")
-                // video call
+
                 const handleVideoCall = useCallback(() => {
                         navigate(`/room/${nameVideoRoom}`);
                 }, [navigate,nameVideoRoom])
 
+                // tìm kiếm
+                function searchUser(name) {
+                    const valueS = document.getElementById("search")
+                    const userSearch = name.filter(value =>{
+                        return value.name.toUpperCase().includes(valueS.nodeValue.toUpperCase())
+                    })
+                    console.log(userSearch)
+                }
                 // sau khi kết nối websocket thành công
                 useEffect(() => {
                     if (socket){
@@ -281,6 +293,7 @@
                                     setIsLoginSuccess(true);
                                     // lưu trữ thông tin đăng nhập
                                     setToken(responseData.data.tokens);
+                                    sessionStorage.setItem("mesnam", user);
                                     // luu tru RE_LOGIN_CODE
                                     // tai sao dung session
                                     sessionStorage.setItem("codeNlu" , responseData.data.RE_LOGIN_CODE);
@@ -305,6 +318,7 @@
                             if(responseData.event === "GET_ROOM_CHAT_MES" && responseData.status === "success"){
                                 const  room = localStorage.getItem("nameRoom");
                                 const name = sessionStorage.getItem("name");
+                                setMess("");
                                 handJoinRoom(room);
                             }
                             // ma relogin chi ddung 1 lan
@@ -325,11 +339,11 @@
                             }
                             // gửi tin nhắn thành công
                             if (responseData.event === "SEND_CHAT" && responseData.status === "success"){
-                                setisMess(true);
+
                                 localStorage.setItem("mes", responseData.data.mes);
                                 localStorage.setItem("messname", responseData.data.name);
                                 console.log(responseData.chatData);
-                                setMess("");
+
                                 // để hiển thị danh sách thì ta phải lập lại việc join room trước đó
                                 // lấy giá tr của room đã lưu tr dựa vào handJoinRoom(room)
                                 const room = localStorage.getItem("nameRoom");
@@ -341,7 +355,6 @@
                                 setMessege(responseData.data.chatData);
                                 localStorage.setItem("ownner", responseData.data.own);
                                 const ownner = localStorage.getItem("ownner");
-
                             }
                              // check user
                             if (responseData.event === "CHECK_USER" && responseData.status === "success"){
@@ -387,7 +400,7 @@
                                       twoMessChat={twoMessChat}
                                       file={file}
                                       handleVideoCall={handleVideoCall}
-
+                                      searchUser = {searchUser(roomName)}
                                   />
                                 }
                                 {isLoginSuccess == false &&
