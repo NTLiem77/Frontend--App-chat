@@ -277,11 +277,11 @@
 
                 // tìm kiếm
                 function searchUser(name) {
-                    const valueS = document.getElementById("search")
-                    const userSearch = name.filter(value =>{
-                        return value.name.toUpperCase().includes(valueS.nodeValue.toUpperCase())
-                    })
-                    console.log(userSearch)
+                    // const valueS = document.getElementById("search")
+                    // const userSearch = name.filter(value =>{
+                    //     return value.name.toUpperCase().includes(valueS.nodeValue.toUpperCase())
+                    // })
+                    // console.log(userSearch)
                 }
                 // sau khi kết nối websocket thành công
                 useEffect(() => {
@@ -400,7 +400,7 @@
                                       twoMessChat={twoMessChat}
                                       file={file}
                                       handleVideoCall={handleVideoCall}
-                                      searchUser = {searchUser(roomName)}
+                                      // searchUser = {searchUser(roomName)}
                                   />
                                 }
                                 {isLoginSuccess == false &&
