@@ -13,7 +13,6 @@
                 list,
             } from "firebase/storage";
             import { v4 } from "uuid";
-
             import LoginForm from "./LoginForm";
             import Room from "./Room";
             import {navigate} from "ionicons/icons";
@@ -31,6 +30,8 @@
                 const [messenger, setMess] = useState("");
                 const [roomName, setRoomName] = useState("");
                 const [messege, setMessege] = useState([]);
+                const [isMessenger, setisMessenger] = useState(false);
+                const [isJoin, setisJoin] = useState(true);
                 const [isClickvideo, setisClickvideo] = useState(false);
                 // tao mang chua phong
                 const [roomList, setRoomList] = useState([]);
@@ -40,48 +41,50 @@
                 const [isEmojiPickerVisible, setEmojiPickerVisible] = useState(false);
                 const navigate = useNavigate();
 
-
                 //uploadFile
-                const [image, setImage] = useState(null)
-                const [fileName, setFileName] = useState("")
-
                 const [imageUpload, setImageUpload] = useState(null);
-                const [imageUrls, setImageUrls] = useState();
+                const [imageUrls, setImageUrls] = useState([]);
 
-                const imagesListRef = ref(storage, "images/");
-                const uploadFile = () => {
-                    if (imageUpload == null){
-                        return;
-                    }
-                    const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
-                    uploadBytes(imageRef, imageUpload).then((snapshot) => {
-                        getDownloadURL(imageRef).then((url) => {
-                            setImageUrls(url)
-                        })
-                        // getDownloadURL(snapshot.ref).then((url) => {
-                        //     setImageUrls((prev) => [...prev, url]);
-                        //     // setImageUrls(url)
-                        // });
-                    });
+                const changImage = (file) => {
+                    return new Promise((resolve) => {
+                        if (file == null){
+                            return;
+                        }
+                        const imageRef = ref(storage, `images/${file.name + v4()}`);
+                        uploadBytes(imageRef, file).then((snapshot) => {
+                            getDownloadURL(snapshot.ref).then((url) => {
+                                console.log("image tests " + url);
+                                setImageUrls((prev) => [...prev, url]);
+
+                                resolve(url);
+                            });
+                        });
+                    })
                 }
+                const setLinkImage = (url) => {
+                    setMess(url);
+                }
+                const handleChangImage = (roomName) => {
+                    changImage(roomName).then((result) => setLinkImage(result));
+                }
+                const imagesListRef = ref(storage, "images/");
+
                 useEffect(() => {
                     listAll(imagesListRef).then((response) => {
                         response.items.forEach((item) => {
                             getDownloadURL(item).then((url) => {
-                                // setImageUrls((prev) => [...prev, url]);
-                                setImageUrls(url);
+                                setImageUrls((prev) => [...prev, url]);
+                                // setImageUrls(url);
                             });
                         });
                     });
                 }, []);
 
 
-                const handTwoClick = (roomName, user) => {
-                    messchat(roomName).then(messPeople(user))
-                }
+
 
                 // khi component được taạo thiết lập kết nối websocket
-                const mesnam = sessionStorage.getItem("mesnam");
+                const username = sessionStorage.getItem("username");
                 useEffect(() => {
                     const newSocket = new WebSocket("ws://140.238.54.136:8080/chat/chat");
 
@@ -91,7 +94,6 @@
                     })
                     const susscess = sessionStorage.getItem("success");
                     if (susscess === "success") {
-                        sessionStorage.setItem("name1", mesnam);
                         const nlu = sessionStorage.getItem("codeNlu");
                         newSocket.onopen = function () {
                             const relogin = {
@@ -99,7 +101,7 @@
                                 data: {
                                     event: "RE_LOGIN",
                                     data: {
-                                        user: mesnam,
+                                        user: username,
                                         code: nlu
                                     }
                                 }
@@ -138,6 +140,8 @@
                         },
                     };
                     socket.send(JSON.stringify(requestData));
+                    sessionStorage.setItem("username", requestData.data.data.user);
+
                 }
                 // su kien dang xuat
                 const handLougout = () => {
@@ -248,11 +252,10 @@
 
                 const twoMessChat = (roomName) => {
                     messchat(roomName).then(get_room_mess_chat(roomName));
-                    uploadFile()
                 }
 
                 // get people chat mess
-                const GET_PEOPLE_CHAT_MES = () => {
+                const GET_PEOPLE_CHAT_MES = (roomName) => {
                     if (socket) {
                         const mess = {
                             action: "onchat",
@@ -265,13 +268,14 @@
                             }
                         }
                         socket.send(JSON.stringify(mess));
+
+                        sessionStorage.setItem("dataTo", mess.data.data.name);
                     }
                 }
-
                 // send chat people
                 const messPeople = (user) => {
-                    if (socket) {
-                        return new Promise((resolve) => {
+                    return new Promise((resolve) => {
+                            if (socket) {
                                 const people = {
                                     action: "onchat",
                                     data: {
@@ -283,12 +287,15 @@
                                         }
                                     }
                                 }
-                                setMessege(prevMessages => [...prevMessages, , messenger]);
                                 socket.send(JSON.stringify(people));
                                 resolve();
                             }
-                        )
                     }
+                    )
+
+                }
+                const twoMessChatPeople = (roomName) => {
+                    messPeople(roomName).then(GET_PEOPLE_CHAT_MES(roomName));
                 }
 
                 // check user
@@ -303,10 +310,14 @@
                                 }
                             }
                         }
-                        socket.send(JSON.stringify(check));
+                        socket.send(JSON.stringify(check));const
+                            success = sessionStorage.getItem("success" );
+                            const checkuser = sessionStorage.getItem("checkuser" );
+                            if(success ==="success" && checkuser === "CHECK_USER"){
+                                sessionStorage.setItem("user" ,check.data.data.user)
+                            }
                     }
-                    // lấy ra danh sách người dùng, phòng
-                    handGetUserList();
+
                 }
 
                 // lay ra danh sach nguoi dung, phong
@@ -332,13 +343,7 @@
                 }
 
                 // file đang làm
-                function handleImageChange({target: {files}}) {
-                    if (files && files[0]) {
-                        setFileName(files[0].name);
-                        setImage(URL.createObjectURL(files[0]));
-                        setMess(fileName);
-                    }
-                }
+
 
                 // làm video call
                 const [nameVideoRoom, setNameVideoRoom] = useState("VideoCall")
@@ -351,14 +356,6 @@
                 const videoCall = (room, mess) => {
                     videocall(room, mess).then(handleVideoCall);
                 }
-                // tìm kiếm
-                // function searchUser(name) {
-                //     const valueS = document.getElementById("search")
-                //     const userSearch = name.filter(value =>{
-                //         return value.name.toUpperCase().includes(valueS.nodeValue.toUpperCase())
-                //     })
-                //     console.log(userSearch)
-                // }
 
                 // sau khi kết nối websocket thành công
                 useEffect(() => {
@@ -370,10 +367,8 @@
                                     setIsLoginSuccess(true);
                                     // lưu trữ thông tin đăng nhập
                                     setToken(responseData.data.tokens);
-                                    sessionStorage.setItem("mesnam", user);
                                     sessionStorage.setItem("login", responseData.event);
                                     const login = sessionStorage.getItem("login");
-                                    console.log(login)
                                     // luu tru RE_LOGIN_CODE
                                     // tai sao dung session
                                     sessionStorage.setItem("codeNlu", responseData.data.RE_LOGIN_CODE);
@@ -381,6 +376,7 @@
                                     navigate("/home");
                                     // lay ra danh sach nguoi dung, phong
                                     handGetUserList();
+                                    setisJoin(true)
                                 } else {
                                     setErrorMsg("Đăng nhập không thành công");
                                 }
@@ -399,6 +395,7 @@
                                     const room = localStorage.getItem("nameRoom");
                                     const name = sessionStorage.getItem("name");
                                     setMess("");
+
                                     handJoinRoom(room);
                                 }
                                 // ma relogin chi ddung 1 lan
@@ -416,15 +413,12 @@
                                     setIsLoginSuccess(false);
                                     sessionStorage.setItem("Relogin", responseData.data);
                                     setErrorMsg("");
-
                                 }
                                 // gửi tin nhắn thành công
                                 if (responseData.event === "SEND_CHAT" && responseData.status === "success") {
-
                                     localStorage.setItem("mes", responseData.data.mes);
                                     localStorage.setItem("messname", responseData.data.name);
                                     console.log(responseData.chatData);
-
                                     // để hiển thị danh sách thì ta phải lập lại việc join room trước đó
                                     // lấy giá tr của room đã lưu tr dựa vào handJoinRoom(room)
                                     const room = localStorage.getItem("nameRoom");
@@ -432,22 +426,46 @@
                                 }
                                 // joinRoom
                                 if (responseData.event === "JOIN_ROOM" && responseData.status === "success") {
+                                    const data = responseData.data.userList.length;
+                                    let ownCount = 0;
+                                    if(responseData.data.own === responseData.data.own){
+                                        ownCount += 1;
+                                        sessionStorage.setItem("count", ownCount +data)
+                                    }
                                     localStorage.setItem("nameRoom", responseData.data.name);
                                     setMessege(responseData.data.chatData);
                                     localStorage.setItem("ownner", responseData.data.own);
                                     const ownner = localStorage.getItem("ownner");
+                                    setisMessenger(false);
+                                    setisJoin(false);
                                 }
+
+                            // kểm tra phòng tồn tại chưa
+                            if (responseData.event === "CREATE_ROOM" && responseData.status === "error"){
+                                alert("Room exsits")
+                            }
+
+                            if(responseData.event === "GET_PEOPLE_CHAT_MES" && responseData.status === "success" ) {
+                                setisMessenger(true);
+                                setMess("");
+                                const dulieu = responseData.data;
+                                setMessege(responseData.data);
+                                setisJoin(false);
+
+
+                            }
                                 // check user
                                 if (responseData.event === "CHECK_USER" && responseData.status === "success") {
                                     const room = localStorage.getItem("nameRoom");
-                                    handJoinRoom(room);
+                                    sessionStorage.setItem("success" ,responseData.status );
+                                    sessionStorage.setItem("checkuser" ,responseData.event );
                                     // lấy ra danh sách người dùng, phòng
-                                    handGetUserList();
+                                    // handGetUserList();
                                 }
 
                                 // lay ra danh sach nguoi dung, phong
                                 if (responseData.event === "GET_USER_LIST" && responseData.status === "success") {
-                                    console.log(responseData.data);
+                                    setisMessenger(false);
                                     setRoomList(responseData.data);
                                 }
                             }
@@ -472,26 +490,28 @@
                                         handJoinRoom={handJoinRoom}
                                         roomName={roomName}
                                         setRoomName={setRoomName}
-                                        handleImageChange={handleImageChange}
+                                        isMessenger = {isMessenger}
                                         messenger={messenger}
                                         setMess={setMess}
-                                        handTwoClick={handTwoClick}
                                         messege={messege}
                                         checkUser={checkUser}
                                         handGetUserList={handGetUserList}
                                         twoMessChat={twoMessChat}
                                         file={file}
+                                        twoMessChatPeople={twoMessChatPeople}
                                         Tranlate={Tranlate}
                                         handleVideoCall={handleVideoCall}
-
+                                        messPeople={messPeople}
                                         videoCall={videoCall}
                                         isClickvideo={isClickvideo}
-
+                                        getchatpeople ={GET_PEOPLE_CHAT_MES }
                                         // searchUser={searchUser(roomName)}
                                         setImageUpload = {setImageUpload}
                                         imageUpload = {imageUpload}
                                         imageUrls = {imageUrls}
-                                        uploadFile = {uploadFile}
+                                        isJoin = {isJoin}
+                                        setisJoin = {setisJoin}
+                                        handleChangImage = {handleChangImage}
                                     />
                                 }
                                 {isLoginSuccess == false &&
