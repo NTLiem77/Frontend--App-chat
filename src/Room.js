@@ -149,9 +149,17 @@ export default class Room extends React.Component{
 
                     {/*Check User*/}
                     <div className="search-chat pointer">
-                        <i className="fa-solid fa-chevron-right"></i>
-                        <div><input className="pointer" type="text" placeholder="Check User" fdprocessedid="hss68p"/>
+                        <div><input type="text" placeholder="Check user" fdprocessedid="hss68p"
+                                    value={this.props.customer}
+                                    onChange={(e) => this.props.setCutomer(e.target.value)}></input>
+                            <div onClick={this.props.checkUser}>
+                                <ion-icon name="chevron-forward" role="img" className="md hydrated"
+                                          aria-label="search outline"></ion-icon>
+                            </div>
                         </div>
+                        {/*<i className="fa-solid fa-chevron-right"></i>*/}
+                        {/*<div><input className="pointer" type="text" placeholder="Check User" fdprocessedid="hss68p"/>*/}
+                        {/*</div>*/}
                     </div>
 
                     {/*Chat box*/}
