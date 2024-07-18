@@ -124,8 +124,9 @@
                         };
                         socket.send(JSON.stringify(data));
                     }
+                    // sau khi tạo thì load lại danh sach phong, người dùng
+                    handGetUserList()
                 }
-
 
                 //xử lý join room
                 const handJoinRoom = (roomName) => {
@@ -264,6 +265,8 @@
                         }
                         socket.send(JSON.stringify(check));
                     }
+                    // lấy ra danh sách người dùng, phòng
+                    handGetUserList();
                 }
 
                 // lay ra danh sach nguoi dung, phong
@@ -417,6 +420,8 @@
                                 {isLoginSuccess == true &&
                                     <Room
                                         user={user}
+                                        customer={customer}
+                                        setCutomer={setCutomer}
                                         handLougout={handLougout}
                                         handPosClick={handlePosClick}
                                         isEmojiPickerVisible={isEmojiPickerVisible}
