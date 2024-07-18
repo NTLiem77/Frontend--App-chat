@@ -182,6 +182,21 @@ export default class Room extends React.Component{
                                             }
                                         </div>
                                         <div>
+                                            {message.name === "20130433" && message.mes.startsWith("https") &&
+                                                <div className="mess frnmess">
+                                                    <h6>
+                                                        <h6 key={index}>
+                                                            <h6>{message.name}</h6>
+                                                            <img  src={decodeURIComponent(message.mes)} alt=""/>
+                                                            <br/>
+                                                            <p><span>{message.createAt}</span></p>
+                                                    </h6>
+                                                </h6>
+                                                </div>
+                                            }
+                                        </div>
+
+                                        <div>
                                             {message.name === "20130423" &&  !message.mes.startsWith("https") &&  !message.mes.startsWith("http") &&
                                                 <div className="mess frnmess">
                                                     <h6>
@@ -212,26 +227,27 @@ export default class Room extends React.Component{
                                             }
                                         </div>
 
-                                        <div>
-                                            {message.name === "20130423" && !message.mes.endsWith("VideoCall") || message.name === "20130423"  && message.mes.startsWith("https") || message.name === "20130433" && message.mes.startsWith("https") &&
-                                                <div className="mess frnmess">
-                                                    <h6>
-                                                        <h6 key={index}>
+                                        {/*<div>*/}
+                                        {/*    {message.name === "20130423" && !message.mes.endsWith("VideoCall") || message.name === "20130423"  && message.mes.startsWith("https") || message.name === "20130433" && !message.mes.startsWith("https") &&*/}
+                                        {/*        <div className="mess frnmess">*/}
+                                        {/*            <h6>*/}
+                                        {/*                <h6 key={index}>*/}
 
-                                                            <h6>{message.name}</h6>
-                                                            <p><a href={decodeURIComponent(message.mes)} target="_blank"
-                                                                  onClick={(event) => {
-                                                                      event.preventDefault();
-                                                                      window.open(decodeURIComponent(message.mes))
-                                                                  }}>{decodeURIComponent(message.mes)}</a>
-                                                                <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>
-                                                        </h6>
-                                                    </h6>
+                                        {/*                    <h6>{message.name}</h6>*/}
+                                        {/*                    <p><a href={decodeURIComponent(message.mes)} target="_blank"*/}
+                                        {/*                          onClick={(event) => {*/}
+                                        {/*                              event.preventDefault();*/}
+                                        {/*                              window.open(decodeURIComponent(message.mes))*/}
+                                        {/*                          }}>{decodeURIComponent(message.mes)}</a>*/}
+                                        {/*                        <br/><span>{convertServerTimeToClientTime(message.createAt)}</span></p>*/}
+                                        {/*                </h6>*/}
+                                        {/*            </h6>*/}
 
-                                                </div>
-                                            }
-                                        </div>
+                                        {/*        </div>*/}
+                                        {/*    }*/}
+                                        {/*</div>*/}
                                         {/*    */}
+
                                         <div>
                                             {  message.mes.endsWith("VideoCall") &&
                                                 <div className="mess frnmess">
@@ -282,19 +298,25 @@ export default class Room extends React.Component{
                            </div>
                                 <div>
                                     <input type={"file"} accept={'image/*'} className={'input-field'} hidden
-                                           onChange={this.props.handleImageChange}/>
-                                    <i className="fa-solid fa-paperclip"  onClick={() => document.querySelector(".input-field").click()}></i>
+                                           onChange={(event) => {
+                                               this.props.setImageUpload(event.target.files[0]);
+                                               this.props.setMess(this.props.imageUrls)
+                                           }}
+                                    />
+                                    <i className="fa-solid fa-paperclip"
+                                       onClick={() => document.querySelector(".input-field").click()}>
+                                    </i>
                                 </div>
-                        <input type="text" placeholder="Type a message" value={this.props.messenger}
-                               onChange={(e) => this.props.setMess(e.target.value)} onKeyPress={(e) => {
-                            if (e.key === 'Enter') {
-                                this.props.twoMessChat(nameRoom);
-                            }
-                        }} fdprocessedid="61a96k"/>
-                        <ion-icon onClick={() => this.props.twoMessChat(nameRoom)} name="send" role="img"
-                                  className="md hydrated" aria-label="send"></ion-icon>
-                            </div>
-                        </div>
+                                <input type="text" placeholder="Type a message" value={this.props.messenger}
+                                       onChange={(e) => this.props.setMess(e.target.value)} onKeyPress={(e) => {
+                                    if (e.key === 'Enter') {
+                                        this.props.twoMessChat(nameRoom);
+                                    }
+                                }} fdprocessedid="61a96k"/>
+                                <ion-icon onClick={() => this.props.twoMessChat(nameRoom)} name="send" role="img"
+                                          className="md hydrated" aria-label="send"></ion-icon>
+                                    </div>
+                           </div>
                         <div className="icon_Emoid">
                             {this.props.isEmojiPickerVisible && (
                                 <EmojiPicker
